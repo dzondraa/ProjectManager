@@ -6,6 +6,6 @@ namespace Application
 {
     public interface IUseCaseLogger
     {
-        void Log(IUseCase useCase);
+        void Log(IUseCase useCase, object useCaseData);
     }
 }
