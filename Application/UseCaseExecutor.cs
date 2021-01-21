@@ -16,12 +16,7 @@ namespace Application
 
         public TResult ExecuteQuery<TSearch, TResult>(IQuery<TSearch, TResult> query, TSearch search)
         {
-            logger.Log(query, new { });
-
-            if (!actor.AllowedUseCases.Contains(query.Id))
-            {
-                throw new UnauthorizeUseCaseException(query, actor);
-            }
+            logger.Log(query, search);
 
             return query.Execute(search);
 
@@ -29,13 +24,7 @@ namespace Application
 
         public void ExecuteCommand<TRequest>(ICommand<TRequest> command, TRequest request)
         {
-            logger.Log(command, actor, request);
-            //Console.Write($"{DateTime.Now}: {actor.Identity} is trying to execute {command.Name}");
-
-            if (!actor.AllowedUseCases.Contains(command.Id))
-            {
-                throw new UnauthorizeUseCaseException(command, actor);
-            }
+            logger.Log(command, request);
 
             command.Execute(request);
         }
