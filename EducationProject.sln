@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30907.101
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application", "Application\Application.csproj", "{F0E8BA3E-7FAD-4A3C-AA83-EC9AF5762179}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Application", "Application\Application.csproj", "{F0E8BA3E-7FAD-4A3C-AA83-EC9AF5762179}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "Domain\Domain.csproj", "{7F4128EA-2A8B-433D-8966-5F1FFC93AF45}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "Domain\Domain.csproj", "{7F4128EA-2A8B-433D-8966-5F1FFC93AF45}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AzureTableDataAccess", "AzureTableDataAccess\AzureTableDataAccess.csproj", "{6B98C431-469E-4D2D-96D1-7EA202AC0AFB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{7F4128EA-2A8B-433D-8966-5F1FFC93AF45}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7F4128EA-2A8B-433D-8966-5F1FFC93AF45}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7F4128EA-2A8B-433D-8966-5F1FFC93AF45}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6B98C431-469E-4D2D-96D1-7EA202AC0AFB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6B98C431-469E-4D2D-96D1-7EA202AC0AFB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6B98C431-469E-4D2D-96D1-7EA202AC0AFB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6B98C431-469E-4D2D-96D1-7EA202AC0AFB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
