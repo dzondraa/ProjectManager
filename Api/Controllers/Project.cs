@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Application;
+using Application.Commands;
+using Application.DataTransfer;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,11 +15,19 @@ namespace Api.Controllers
     [ApiController]
     public class Project : ControllerBase
     {
+        private readonly UseCaseExecutor _executor;
+
+        public Project(UseCaseExecutor executor)
+        {
+            _executor = executor;
+        }
+
         // GET: api/<Project>
         [HttpGet]
-        public IEnumerable<string> Get()
+        public IActionResult Get()
         {
-            return new string[] { "value1", "value2" };
+
+            return Ok(new { });
         }
 
         // GET api/<Project>/5
@@ -28,8 +39,11 @@ namespace Api.Controllers
 
         // POST api/<Project>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async Task<IActionResult> Post([FromBody] ProjectDto dto, [FromServices] ICreateProjectCommandAsync command)
         {
+            //await command.Execute(dto);
+            await _executor.ExecuteCommandAsync(command, dto);
+            return Ok();
         }
 
         // PUT api/<Project>/5

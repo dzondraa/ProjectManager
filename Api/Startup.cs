@@ -1,3 +1,7 @@
+using Application;
+using Application.Commands;
+using Implementation.Commands;
+using Implementation.Implementation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -24,6 +28,9 @@ namespace Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddTransient<UseCaseExecutor>();
+            services.AddTransient<ICreateProjectCommandAsync, TableCliCreateProject>();
+            services.AddTransient<IUseCaseLogger, ConsoleUseCaseLogger>();
             services.AddControllers();
         }
 

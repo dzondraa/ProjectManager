@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Application
 {
@@ -28,5 +29,14 @@ namespace Application
 
             command.Execute(request);
         }
+
+        public async Task ExecuteCommandAsync<TRequest>(ICommandAsync<TRequest> command, TRequest request)
+        {
+            logger.Log(command, request);
+
+            await command.Execute(request);
+        }
+
+
     }
 }
