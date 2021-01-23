@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "Domain\Domain.csp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AzureTableDataAccess", "AzureTableDataAccess\AzureTableDataAccess.csproj", "{6B98C431-469E-4D2D-96D1-7EA202AC0AFB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Implementation", "Implementation\Implementation.csproj", "{6D96AAB6-C57E-47F5-80FF-3DFEF11FB1CB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{6B98C431-469E-4D2D-96D1-7EA202AC0AFB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6B98C431-469E-4D2D-96D1-7EA202AC0AFB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6B98C431-469E-4D2D-96D1-7EA202AC0AFB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6D96AAB6-C57E-47F5-80FF-3DFEF11FB1CB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6D96AAB6-C57E-47F5-80FF-3DFEF11FB1CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6D96AAB6-C57E-47F5-80FF-3DFEF11FB1CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6D96AAB6-C57E-47F5-80FF-3DFEF11FB1CB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
