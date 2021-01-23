@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Application.Commands
 {
-    public interface ICreateProjectCommand : ICommand<ProjectDto>
+    public interface ICreateProjectCommandAsync : ICommandAsync<ProjectDto>
     {
     }
 }

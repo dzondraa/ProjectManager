@@ -1,13 +1,15 @@
 ﻿using Application.Commands;
 using Application.DataTransfer;
 using AzureTableDataAccess;
+using AzureTableDataAccess.Entities;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Implementation.Commands
 {
-    public class TableCliCreateProject : ICreateProjectCommand
+    public class TableCliCreateProject : ICreateProjectCommandAsync
     {
         private readonly TableCli _tableCli;
         
@@ -20,9 +22,9 @@ namespace Implementation.Commands
             _tableCli = new TableCli(AzureStorageConnection.Instance(), "Projects");
         }
 
-        public void Execute(ProjectDto request)
+        public async Task Execute(ProjectDto request)
         {
-           
+            await _tableCli.MergeEntityAsync(new Project("partition1", new Guid().ToString(), request.Name));
         }
     }
 }

@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 
 namespace Application
 {
-    public interface ICommand<TRequest> : IUseCase
+    public interface ICommandAsync<TRequest> : IUseCase
     {
-        void Execute(TRequest request);
+        public Task Execute(TRequest request);
     }
 }
