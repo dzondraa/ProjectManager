@@ -37,11 +37,11 @@ namespace AzureTableDataAccess
         public async Task<TableEntity> MergeEntityAsync(DynamicTableEntity entity)
         {
             entity.ETag = "*";
-            TableOperation insertOrMergeOp = TableOperation.Replace(entity);
+            TableOperation mergeOperation = TableOperation.Replace(entity);
             // Executing operation
-            TableResult result = await _table.ExecuteAsync(insertOrMergeOp);
-            TableEntity insertedEntity = result.Result as TableEntity;
-            return insertedEntity;
+            TableResult result = await _table.ExecuteAsync(mergeOperation);
+            TableEntity deletedEntity = result.Result as TableEntity;
+            return deletedEntity;
         }
 
         public async Task<TableEntity> QueryEntity<T>(string partitionKey, string rowKey) where T : ITableEntity
