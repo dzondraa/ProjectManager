@@ -6,7 +6,7 @@ namespace Application.DataTransfer
 {
     public class ProjectDto
     {
-        public int Id { get; set; }
+        public String Id { get; set; }
         public String Name { get; set; }
     }
 }

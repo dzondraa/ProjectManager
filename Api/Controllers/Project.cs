@@ -41,7 +41,6 @@ namespace Api.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] ProjectDto dto, [FromServices] ICreateProjectCommandAsync command)
         {
-            //await command.Execute(dto);
             await _executor.ExecuteCommandAsync(command, dto);
             return Ok();
         }
@@ -56,6 +55,7 @@ namespace Api.Controllers
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
+
         }
     }
 }

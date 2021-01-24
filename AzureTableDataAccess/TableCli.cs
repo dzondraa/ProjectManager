@@ -28,7 +28,6 @@ namespace AzureTableDataAccess
         public async Task<TableEntity> MergeEntityAsync(TableEntity entity)
         {
             TableOperation insertOrMergeOp = TableOperation.InsertOrMerge(entity);
-
             // Executing operation
             TableResult result = await _table.ExecuteAsync(insertOrMergeOp);
             TableEntity insertedEntity = result.Result as TableEntity;
@@ -37,12 +36,29 @@ namespace AzureTableDataAccess
 
         public async Task<TableEntity> QueryEntity<T>(string partitionKey, string rowKey) where T : ITableEntity
         {
-            TableOperation retrieveOperation = TableOperation.Retrieve<T>(partitionKey, rowKey);
+            //TableOperation retrieveOperation = TableOperation.Retrieve<T>(partitionKey, rowKey);
 
+            //TableResult result = await _table.ExecuteAsync(retrieveOperation);
+            //TableEntity entity = result.Result as TableEntity;
+            return await GetEntity<T>(partitionKey, rowKey);
+        }
+
+        //public async Task DeleteEntityAsync<T>(string partitionKey, string rowKey) where T : ITableEntity
+        //{
+    
+            
+
+
+        //}
+
+        private async Task<TableEntity> GetEntity<T>(string partitionKey, string rowKey) where T : ITableEntity
+        {
+            TableOperation retrieveOperation = TableOperation.Retrieve<T>(partitionKey, rowKey);
             TableResult result = await _table.ExecuteAsync(retrieveOperation);
             TableEntity entity = result.Result as TableEntity;
             return entity;
         }
+
 
     }
 }
