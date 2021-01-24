@@ -12,5 +12,10 @@ namespace AzureTableDataAccess.Entities
         {
             Name = name;
         }
+
+        public Project()
+        {
+
+        }
     }
 }

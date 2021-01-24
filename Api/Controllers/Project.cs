@@ -53,9 +53,11 @@ namespace Api.Controllers
 
         // DELETE api/<Project>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<IActionResult> Delete(string id, [FromServices] IDeleteProjectAsync command)
         {
-
+            
+            await _executor.ExecuteCommandAsync(command, new ProjectDto { Id = id});
+            return Ok();
         }
     }
 }

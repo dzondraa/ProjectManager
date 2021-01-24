@@ -16,6 +16,11 @@ namespace AzureTableDataAccess
             PartitionKey = partitionKey;
             RowKey = rowKey;
         }
+
+        public Entity()
+        {
+
+        }
     }
 
  

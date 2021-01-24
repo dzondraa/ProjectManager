@@ -1,5 +1,6 @@
 using Application;
 using Application.Commands;
+using AutoMapper;
 using Implementation.Commands;
 using Implementation.Implementation;
 using Microsoft.AspNetCore.Builder;
@@ -30,7 +31,11 @@ namespace Api
         {
             services.AddTransient<UseCaseExecutor>();
             services.AddTransient<ICreateProjectCommandAsync, TableCliCreateProject>();
+            services.AddTransient<IDeleteProjectAsync, TableCliDeleteProjectAsync>();
+
             services.AddTransient<IUseCaseLogger, ConsoleUseCaseLogger>();
+
+            services.AddAutoMapper(typeof(Startup));
             services.AddControllers();
         }
 
