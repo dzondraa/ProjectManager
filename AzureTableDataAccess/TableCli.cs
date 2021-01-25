@@ -1,4 +1,5 @@
-﻿using Microsoft.Azure.Cosmos.Table;
+﻿using AzureTableDataAccess.Entities;
+using Microsoft.Azure.Cosmos.Table;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -9,7 +10,7 @@ namespace AzureTableDataAccess
     public class TableCli
     {
         private readonly CloudStorageAccount _storageAcc;
-        private readonly CloudTable _table;
+        public CloudTable table;
 
         public TableCli(CloudStorageAccount account, String tableName)
         {
@@ -17,7 +18,7 @@ namespace AzureTableDataAccess
             try
             {
                 CloudTableClient tableClient = _storageAcc.CreateCloudTableClient(new TableClientConfiguration());
-                _table = tableClient.GetTableReference(tableName);
+                table = tableClient.GetTableReference(tableName);
             }
             catch (Exception ex)
             {
@@ -29,7 +30,7 @@ namespace AzureTableDataAccess
         {
             TableOperation insertOrMergeOp = TableOperation.InsertOrMerge(entity);
             // Executing operation
-            TableResult result = await _table.ExecuteAsync(insertOrMergeOp);
+            TableResult result = await table.ExecuteAsync(insertOrMergeOp);
             TableEntity insertedEntity = result.Result as TableEntity;
             return insertedEntity;
         }
@@ -39,32 +40,21 @@ namespace AzureTableDataAccess
             entity.ETag = "*";
             TableOperation mergeOperation = TableOperation.Replace(entity);
             // Executing operation
-            TableResult result = await _table.ExecuteAsync(mergeOperation);
+            TableResult result = await table.ExecuteAsync(mergeOperation);
             TableEntity deletedEntity = result.Result as TableEntity;
             return deletedEntity;
         }
 
-        public async Task<TableEntity> QueryEntity<T>(string partitionKey, string rowKey) where T : ITableEntity
-        {
-            //TableOperation retrieveOperation = TableOperation.Retrieve<T>(partitionKey, rowKey);
-
-            //TableResult result = await _table.ExecuteAsync(retrieveOperation);
-            //TableEntity entity = result.Result as TableEntity;
-            return await GetEntity<T>(partitionKey, rowKey);
-        }
-
-        //public async Task DeleteEntityAsync<T>(string partitionKey, string rowKey) where T : ITableEntity
+        //public async Task<TableEntity> QueryEntity<T>(string partitionKey, string rowKey) where T : new()
         //{
-    
-            
-
-
+        //    var query = table.CreateQuery<T>();
         //}
+
 
         private async Task<TableEntity> GetEntity<T>(string partitionKey, string rowKey) where T : ITableEntity
         {
             TableOperation retrieveOperation = TableOperation.Retrieve<T>(partitionKey, rowKey);
-            TableResult result = await _table.ExecuteAsync(retrieveOperation);
+            TableResult result = await table.ExecuteAsync(retrieveOperation);
             TableEntity entity = result.Result as TableEntity;
             return entity;
         }

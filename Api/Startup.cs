@@ -1,8 +1,10 @@
 using Application;
 using Application.Commands;
+using Application.Queries;
 using AutoMapper;
 using Implementation.Commands;
 using Implementation.Implementation;
+using Implementation.Queries;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -32,6 +34,7 @@ namespace Api
             services.AddTransient<UseCaseExecutor>();
             services.AddTransient<ICreateProjectCommandAsync, TableCliCreateProject>();
             services.AddTransient<IDeleteProjectAsync, TableCliDeleteProjectAsync>();
+            services.AddTransient<IQueryProject, TableCliQueryProject>();
 
             services.AddTransient<IUseCaseLogger, ConsoleUseCaseLogger>();
 

@@ -23,6 +23,13 @@ namespace Application
 
         }
 
+        public async Task<TResult> ExecuteQueryAsync<TSearch, TResult>(IQueryAsync<TSearch, TResult> query, TSearch search)
+        {
+            logger.Log(query, search);
+            return await query.Execute(search);
+
+        }
+
         public void ExecuteCommand<TRequest>(ICommand<TRequest> command, TRequest request)
         {
             logger.Log(command, request);

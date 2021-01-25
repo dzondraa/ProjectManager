@@ -1,6 +1,8 @@
-﻿using Application;
+﻿using Api.Searches;
+using Application;
 using Application.Commands;
 using Application.DataTransfer;
+using Application.Queries;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -24,10 +26,10 @@ namespace Api.Controllers
 
         // GET: api/<Project>
         [HttpGet]
-        public IActionResult Get()
+        public IActionResult Get([FromQuery] ProjectSearch search, [FromServices] IQueryProject query)
         {
-
-            return Ok(new { });
+            var result = _executor.ExecuteQuery(query, search);
+            return Ok(result);
         }
 
         // GET api/<Project>/5

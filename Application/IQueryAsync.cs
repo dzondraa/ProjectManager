@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 
 namespace Application
 {
-    public interface ICommandAsync<TRequest> : IUseCase
+    public interface IQueryAsync<TSearch, TResult> : IUseCase
     {
-        Task Execute(TRequest request);
+        Task<TResult> Execute(TSearch search);
     }
 }
