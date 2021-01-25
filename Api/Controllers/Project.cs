@@ -27,9 +27,8 @@ namespace Api.Controllers
         // GET: api/<Project>
         [HttpGet]
         public IActionResult Get([FromQuery] ProjectSearch search, [FromServices] IQueryProject query)
-        {
-            var result = _executor.ExecuteQuery(query, search);
-            return Ok(result);
+        { 
+            return Ok(_executor.ExecuteQuery(query, search));
         }
 
         // GET api/<Project>/5

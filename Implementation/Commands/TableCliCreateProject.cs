@@ -25,7 +25,9 @@ namespace Implementation.Commands
 
         public async Task Execute(ProjectDto request)
         {
-            await _tableCli.InsertOrMergeEntityAsync(new Project("partition1", Guid.NewGuid().ToString(), request.Name));
+            var date = DateTime.Now;
+            var partitionId = date.Year.ToString() + "-" + date.Month.ToString();
+            await _tableCli.InsertOrMergeEntityAsync(new Project(partitionId, Guid.NewGuid().ToString(), request.Name));
         }
     }
 }
