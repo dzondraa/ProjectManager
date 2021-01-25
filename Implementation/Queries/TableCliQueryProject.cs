@@ -28,7 +28,7 @@ namespace Implementation.Queries
             _tableCli = new TableCli(AzureStorageConnection.Instance(), "Projects");
         }
 
-        public PagedResponse<Project> Execute(ProjectSearch search)
+        public async Task<PagedResponse<Project>> Execute(ProjectSearch search)
         {
             var query = _tableCli.table.CreateQuery<Project>().Where(x => x.Name == search.Name);
 

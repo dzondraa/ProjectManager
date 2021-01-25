@@ -33,9 +33,10 @@ namespace Api.Controllers
 
         // GET api/<Project>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public IActionResult Get(string id, [FromServices] IGetProject query)
         {
-            return "value";
+            var result = _executor.ExecuteQuery(query, new ProjectDto { Id = id });
+            return Ok(result);
         }
 
         // POST api/<Project>

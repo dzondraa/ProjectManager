@@ -4,10 +4,11 @@ using AzureTableDataAccess.Entities;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Application.Queries
 {
-    public interface IQueryProject : IQuery<ProjectSearch, PagedResponse<Project>>
+    public interface IQueryProject : IQuery<ProjectSearch, Task<PagedResponse<Project>>>
     {
     }
 }

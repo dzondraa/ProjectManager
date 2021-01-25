@@ -12,7 +12,7 @@ namespace AzureTableDataAccess
         private readonly CloudStorageAccount _storageAcc;
         public CloudTable table;
 
-        public TableCli(CloudStorageAccount account, String tableName)
+        public TableCli(CloudStorageAccount account, string tableName)
         {
             _storageAcc = account;
             try
@@ -45,10 +45,10 @@ namespace AzureTableDataAccess
             return deletedEntity;
         }
 
-        //public async Task<TableEntity> QueryEntity<T>(string partitionKey, string rowKey) where T : new()
-        //{
-        //    var query = table.CreateQuery<T>();
-        //}
+        public async Task<TableEntity> GetSingleEntity<T>(string partitionKey, string rowKey) where T : TableEntity
+        {
+            return await GetEntity<T>(partitionKey, rowKey);
+        }
 
 
         private async Task<TableEntity> GetEntity<T>(string partitionKey, string rowKey) where T : ITableEntity
