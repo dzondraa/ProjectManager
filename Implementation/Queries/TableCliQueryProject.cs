@@ -30,10 +30,10 @@ namespace Implementation.Queries
 
         public PagedResponse<Project> Execute(ProjectSearch search)
         {
-            var query = _tableCli.table.CreateQuery<Project>();
+            var query = _tableCli.table.CreateQuery<Project>().Where(x => x.Name == search.Name);
 
             if (!String.IsNullOrWhiteSpace(search.Name))
-                query.Where(x => x.Name == search.Name);
+                query = query.Where(x => x.Name == search.Name);
 
             return query.ToPagedResponse();
         }

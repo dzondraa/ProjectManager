@@ -28,6 +28,8 @@ namespace Implementation.Commands
         public async Task Execute(ProjectDto request)
         {
             //await _tableCli.MergeEntityAsync(new Project("partition1", request.Id, request.Name));
+
+            // Mapping to dto to entity object - compatibile for storage operations
             var tableEntity = _mapper.Map<Project>(request);
             var dynTableEntity = new DynamicTableEntity(tableEntity.PartitionKey, tableEntity.RowKey);
             dynTableEntity.Properties.Add("Deleted", new EntityProperty(true));
