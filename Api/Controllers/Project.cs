@@ -49,8 +49,11 @@ namespace Api.Controllers
 
         // PUT api/<Project>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public async Task<IActionResult> Put(string id, [FromBody] ProjectDto dto, [FromServices] IUpdateProjectCommandAsync command)
         {
+            dto.Id = id;
+            await _executor.ExecuteCommandAsync(command, dto);
+            return Ok();
         }
 
         // DELETE api/<Project>/5

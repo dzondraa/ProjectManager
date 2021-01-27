@@ -33,7 +33,7 @@ namespace Implementation.Commands
             var tableEntity = _mapper.Map<Project>(request);
             var dynTableEntity = new DynamicTableEntity(tableEntity.PartitionKey, tableEntity.RowKey);
             dynTableEntity.Properties.Add("Deleted", new EntityProperty(true));
-            await _tableCli.MergeEntityAsync(dynTableEntity);
+            await _tableCli.MergeDynamicEntityAsync(dynTableEntity);
         }
     }
 }

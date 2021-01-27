@@ -36,6 +36,7 @@ namespace Api
             services.AddTransient<IDeleteProjectAsync, TableCliDeleteProjectAsync>();
             services.AddTransient<IQueryProject, TableCliQueryProject>();
             services.AddTransient<IGetProject, LinqGetProject>();
+            services.AddTransient<IUpdateProjectCommandAsync, TableCliUpdateProjectAsync>();
 
             services.AddTransient<IUseCaseLogger, ConsoleUseCaseLogger>();
 

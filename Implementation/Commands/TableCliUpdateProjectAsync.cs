@@ -1,0 +1,35 @@
+﻿using Application.DataTransfer;
+using AzureTableDataAccess;
+using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Threading.Tasks;
+using AutoMapper;
+using AzureTableDataAccess.Entities;
+using Application.Commands;
+
+namespace Implementation.Commands
+{
+    public class TableCliUpdateProjectAsync : IUpdateProjectCommandAsync
+    {        
+        private readonly TableCli _tableCli;
+        private readonly IMapper _mapper;
+
+        public TableCliUpdateProjectAsync(IMapper mapper)
+        {
+            _tableCli = new TableCli(AzureStorageConnection.Instance(), "Projects");;
+            _mapper = mapper;
+        }
+
+        public int Id => 20;
+
+        public string Name => "Updating project record using Table Storage API";
+
+        public async Task Execute(ProjectDto request)
+        {
+            // mapping to DataAccess object
+            var projectEntity = _mapper.Map<Project>(request);
+            await _tableCli.MergeEntityAsync(projectEntity);
+        }
+    }
+}
