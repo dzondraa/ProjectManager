@@ -6,6 +6,7 @@ using AzureTableDataAccess;
 using AzureTableDataAccess.Entities;
 using Implementation.Core;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Azure.Cosmos.Table;
 using Microsoft.Azure.Documents.SystemFunctions;
 using System;
 using System.Collections.Generic;
@@ -30,7 +31,8 @@ namespace Implementation.Queries
 
         public async Task<PagedResponse<Project>> Execute(ProjectSearch search)
         {
-            var query = _tableCli.table.CreateQuery<Project>().Where(x => x.Name == search.Name);
+            IQueryable<Project> query;
+            query = _tableCli.table.CreateQuery<Project>();
 
             if (!String.IsNullOrWhiteSpace(search.Name))
                 query = query.Where(x => x.Name == search.Name);
