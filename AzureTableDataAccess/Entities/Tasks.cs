@@ -4,17 +4,17 @@ using System.Text;
 
 namespace AzureTableDataAccess.Entities
 {
-    public class Task : Entity
+    public class Tasks : Entity
     {
         public string Name { get; set; }
         public string Description { get; set; }
 
-        public Task()
+        public Tasks()
         {
         }
 
         // Partition id is project id - implicit one-to-many relationship 
-        public Task(string projectId, string rowKey) : base(projectId, rowKey)
+        public Tasks(string projectId, string rowKey) : base(projectId, rowKey)
         {
             
         }

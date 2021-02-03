@@ -1,4 +1,5 @@
-﻿using Application.Commands;
+﻿using Application;
+using Application.Commands;
 using Application.DataTransfer;
 using AzureTableDataAccess;
 using AzureTableDataAccess.Entities;
@@ -23,11 +24,12 @@ namespace Implementation.Commands
             _tableCli = new TableCli(AzureStorageConnection.Instance(), "Projects");
         }
 
-        public async Task Execute(ProjectDto request)
+        public async System.Threading.Tasks.Task Execute(ProjectDto request)
         {
             var date = DateTime.Now;
             var partitionId = date.Year.ToString() + "-" + date.Month.ToString();
             await _tableCli.InsertOrMergeEntityAsync(new Project(partitionId, Guid.NewGuid().ToString(), request.Name));
         }
+
     }
 }

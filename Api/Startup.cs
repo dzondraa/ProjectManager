@@ -32,11 +32,14 @@ namespace Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddTransient<UseCaseExecutor>();
+            // Projects services
             services.AddTransient<ICreateProjectCommandAsync, TableCliCreateProject>();
             services.AddTransient<IDeleteProjectAsync, TableCliDeleteProjectAsync>();
             services.AddTransient<IQueryProject, TableCliQueryProject>();
             services.AddTransient<IGetProject, LinqGetProject>();
             services.AddTransient<IUpdateProjectCommandAsync, TableCliUpdateProjectAsync>();
+            // Tasks services
+            services.AddTransient<IQueryTask, TableCliQueryTask>();
 
             services.AddTransient<IUseCaseLogger, ConsoleUseCaseLogger>();
 
