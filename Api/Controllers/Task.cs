@@ -32,13 +32,13 @@ namespace Api.Controllers
             return Ok(_executor.ExecuteQuery(query, search));
         }
 
-        //// GET api/<Task>/5
-        //[HttpGet("{id}")]
-        //public IActionResult Get(string id, [FromServices] IGetTask query)
-        //{
-        //    var result = _executor.ExecuteQuery(query, new TaskDto { Id = id });
-        //    return Ok(result);
-        //}
+        // GET api/<Task>/5
+        [HttpGet("{id}")]
+        public IActionResult Get(string id, [FromServices] IGetTask query)
+        {
+            var result = _executor.ExecuteQuery(query, new TaskDto { Id = id.Split('$')[1], ProjectId = id.Split('$')[0] });
+            return Ok(result);
+        }
 
         //// POST api/<Task>
         //[HttpPost]
@@ -61,7 +61,7 @@ namespace Api.Controllers
         //[HttpDelete("{id}")]
         //public async Task<IActionResult> Delete(string id, [FromServices] IDeleteTaskAsync command)
         //{
-            
+
         //    await _executor.ExecuteCommandAsync(command, new TaskDto { Id = id});
         //    return Ok();
         //}
