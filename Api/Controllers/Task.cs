@@ -40,15 +40,15 @@ namespace Api.Controllers
             return Ok(result);
         }
 
-        //// POST api/<Task>
-        //[HttpPost]
-        //public async Task<IActionResult> Post([FromBody] TaskDto dto, [FromServices] ICreateTaskCommandAsync command)
-        //{
-        //    await _executor.ExecuteCommandAsync(command, dto);
-        //    return Ok();
-        //}
+        // POST api/<Task>
+        [HttpPost]
+        public async Task<IActionResult> Post([FromBody] TaskDto dto, [FromServices] ICreateTaskCommandAsync command)
+        {
+            await _executor.ExecuteCommandAsync(command, dto);
+            return Ok();
+        }
 
-        //// PUT api/<Task>/5
+        // PUT api/<Task>/5
         //[HttpPut("{id}")]
         //public async Task<IActionResult> Put(string id, [FromBody] TaskDto dto, [FromServices] IUpdateTaskCommandAsync command)
         //{
@@ -62,7 +62,7 @@ namespace Api.Controllers
         //public async Task<IActionResult> Delete(string id, [FromServices] IDeleteTaskAsync command)
         //{
 
-        //    await _executor.ExecuteCommandAsync(command, new TaskDto { Id = id});
+        //    await _executor.ExecuteCommandAsync(command, new TaskDto { Id = id });
         //    return Ok();
         //}
     }

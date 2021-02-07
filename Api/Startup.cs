@@ -40,7 +40,8 @@ namespace Api
             services.AddTransient<IUpdateProjectCommandAsync, TableCliUpdateProjectAsync>();
             // Tasks services
             services.AddTransient<IQueryTask, TableCliQueryTask>();
-            services.AddTransient<IGetTask, LinqGetTask>();
+            services.AddTransient<IGetTask, LinqGetTask>();//ICreateTaskCommandAsync
+            services.AddTransient<ICreateTaskCommandAsync, TableCliCreateTaskAsync>();
 
             services.AddTransient<IUseCaseLogger, ConsoleUseCaseLogger>();
 
