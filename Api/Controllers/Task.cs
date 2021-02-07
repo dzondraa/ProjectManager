@@ -49,13 +49,14 @@ namespace Api.Controllers
         }
 
         // PUT api/<Task>/5
-        //[HttpPut("{id}")]
-        //public async Task<IActionResult> Put(string id, [FromBody] TaskDto dto, [FromServices] IUpdateTaskCommandAsync command)
-        //{
-        //    dto.Id = id;
-        //    await _executor.ExecuteCommandAsync(command, dto);
-        //    return Ok();
-        //}
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Put(string id, [FromBody] TaskDto dto, [FromServices] IUpdateTaskAsync command)
+        {
+            dto.Id = id.Split("$")[1];
+            dto.ProjectId = id.Split("$")[0];
+            await _executor.ExecuteCommandAsync(command, dto);
+            return Ok();
+        }
 
         //// DELETE api/<Task>/5
         //[HttpDelete("{id}")]
