@@ -54,8 +54,19 @@ namespace Api
             services.AddAutoMapper(typeof(Startup));
             services
                 .AddControllers(optrions => optrions.Filters.Add<ValidationFilter>())
-                .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<ProjectRequestValidation>());
-                
+                .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<Startup>());
+
+            //Swagger
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
+                {
+                    Version = "v1",
+                    Title = "Coding Projects Management API",
+                    Description = "Open API for accessing the system to manage projects with code snippets"
+                });
+            });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -65,6 +76,12 @@ namespace Api
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Coding Projects Management API");
+            });
 
             app.UseRouting();
 

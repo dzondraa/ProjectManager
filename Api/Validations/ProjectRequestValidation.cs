@@ -12,9 +12,7 @@ namespace Api.Validations
         public ProjectRequestValidation()
         {
             RuleFor(x => x.Name)
-                .NotEmpty()
-                .MaximumLength(5)
-                .MaximumLength(35);
+                .NotEmpty();
         }
     }
 }
