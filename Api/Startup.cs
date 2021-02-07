@@ -16,6 +16,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using FluentValidation;
+using FluentValidation.AspNetCore;
+using Api.Filters;
+using Api.Validations;
 
 namespace Api
 {
@@ -48,7 +52,10 @@ namespace Api
             services.AddTransient<IUseCaseLogger, ConsoleUseCaseLogger>();
 
             services.AddAutoMapper(typeof(Startup));
-            services.AddControllers();
+            services
+                .AddControllers(optrions => optrions.Filters.Add<ValidationFilter>())
+                .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<ProjectRequestValidation>());
+                
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
