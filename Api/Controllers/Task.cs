@@ -58,13 +58,13 @@ namespace Api.Controllers
             return Ok();
         }
 
-        //// DELETE api/<Task>/5
-        //[HttpDelete("{id}")]
-        //public async Task<IActionResult> Delete(string id, [FromServices] IDeleteTaskAsync command)
-        //{
+        // DELETE api/<Task>/5
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(string id, [FromServices] IDeleteTaskAsync command)
+        {
 
-        //    await _executor.ExecuteCommandAsync(command, new TaskDto { Id = id });
-        //    return Ok();
-        //}
+            await _executor.ExecuteCommandAsync(command, new TaskDto { Id = id.Split("$")[1], ProjectId = id.Split("$")[0] });
+            return Ok();
+        }
     }
 }

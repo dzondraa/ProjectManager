@@ -9,7 +9,7 @@ namespace Implementation.Implementation
     {
         public void Log(IUseCase useCase, object useCaseData)
         {
-            Console.WriteLine($"Running action {useCase.Name}");
+            Console.WriteLine($"{DateTime.Now} Running action {useCase.Name}");
         }
     }
 }
