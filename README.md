@@ -25,3 +25,8 @@ Applicaiton uses Azure Storage SDK to communicate with the Azure Storage API to 
 API documentation is auto generated and can be found here: http://localhost:5000/swagger
 
 ## Postman support
+## Dependencies
+- Fluent Validation (https://fluentvalidation.net/) - used for middleware entity validation
+- AutoMapper (https://automapper.org/) - Mapping Data Transfer objects to Data objects and reverse
+- AuzreStorage (https://docs.microsoft.com/en-us/dotnet/api/overview/azure/storage) - Interacting with azure storage
+- Swashbuckle.AspNetCore (https://swagger.io/) - Document and test
