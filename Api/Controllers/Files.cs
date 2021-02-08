@@ -1,8 +1,10 @@
 ﻿using Application;
+using Application.Commands;
 using Application.DataTransfer;
 using Application.Queries;
 using Azure.Storage.Blobs.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Azure.Management.ResourceManager.Fluent.Core.ResourceActions;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -25,7 +27,7 @@ namespace Api.Controllers
             _executor = executor;
         }
         // GET: api/<File>
-        [HttpGet]
+        //[HttpGet]
         //public IEnumerable<string> Get()
         //{
         //    return new string[] { "value1", "value2" };
@@ -43,8 +45,9 @@ namespace Api.Controllers
 
         // POST api/<File>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async void Post([FromBody] FileDto request, [FromServices] IUploadFileCommandAsync command)
         {
+            await _executor.ExecuteCommandAsync(command, request);
         }
 
         // PUT api/<File>/5

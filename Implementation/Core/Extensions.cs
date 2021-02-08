@@ -33,6 +33,5 @@ namespace Implementation.Core
             return response;
         }
 
-
     }
 }
