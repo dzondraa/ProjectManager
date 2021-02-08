@@ -20,6 +20,7 @@ using FluentValidation;
 using FluentValidation.AspNetCore;
 using Api.Filters;
 using Api.Validations;
+using Azure.Storage.Blobs;
 
 namespace Api
 {
@@ -48,8 +49,11 @@ namespace Api
             services.AddTransient<ICreateTaskCommandAsync, TableCliCreateTaskAsync>();
             services.AddTransient<IUpdateTaskAsync, TableCliUpdateTaskAsync>();
             services.AddTransient<IDeleteTaskAsync, TableCliDeleteTaskAsync>();
+            // Files
+            services.AddTransient<IGetCode, BlobCliGetCodeFiles>();
 
             services.AddTransient<IUseCaseLogger, ConsoleUseCaseLogger>();
+            services.AddSingleton(x => new BlobServiceClient("DefaultEndpointsProtocol=https;AccountName=eduaccount;AccountKey=1aum0Jx/fz/xENwYqz+j7JRTnYS5cIsUUdfZ1XvQ2R7NnoIaObJ7bg4KxInTt1IlvISRKOebtBSrroUEl43AZA==;EndpointSuffix=core.windows.net"));
 
             services.AddAutoMapper(typeof(Startup));
             services
