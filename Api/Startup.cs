@@ -21,6 +21,8 @@ using FluentValidation.AspNetCore;
 using Api.Filters;
 using Api.Validations;
 using Azure.Storage.Blobs;
+using Api.Core;
+using Implementation.Validatiors;
 
 namespace Api
 {
@@ -52,14 +54,16 @@ namespace Api
             // Files
             services.AddTransient<IGetCode, BlobCliGetCodeFiles>();
             services.AddTransient<IUploadFileCommandAsync, BlobCliUploadFile>();
+            // Validations
+            services.AddTransient<ProjectRequestValidator>();
 
             services.AddTransient<IUseCaseLogger, ConsoleUseCaseLogger>();
             services.AddSingleton(x => new BlobServiceClient("DefaultEndpointsProtocol=https;AccountName=eduaccount;AccountKey=1aum0Jx/fz/xENwYqz+j7JRTnYS5cIsUUdfZ1XvQ2R7NnoIaObJ7bg4KxInTt1IlvISRKOebtBSrroUEl43AZA==;EndpointSuffix=core.windows.net"));
 
             services.AddAutoMapper(typeof(Startup));
             services
-                .AddControllers(optrions => optrions.Filters.Add<ValidationFilter>())
-                .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<Startup>());
+                .AddControllers(/*optrions => optrions.Filters.Add<ValidationFilter>()*/);
+                //.AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<Startup>());
 
             //Swagger
             services.AddSwaggerGen(c =>
@@ -89,6 +93,8 @@ namespace Api
             });
 
             app.UseRouting();
+            app.UseMiddleware<GlobalExceptionHandler>();
+
 
             app.UseAuthorization();
 

@@ -2,14 +2,13 @@
 using FluentValidation;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Text;
 
-namespace Api.Validations
+namespace Implementation.Validatiors
 {
-    public class ProjectRequestValidation : AbstractValidator<ProjectDto>
+    public class ProjectRequestValidator : AbstractValidator<ProjectDto>
     {
-        public ProjectRequestValidation()
+        public ProjectRequestValidator()
         {
             RuleFor(x => x.Name)
                 .NotEmpty();

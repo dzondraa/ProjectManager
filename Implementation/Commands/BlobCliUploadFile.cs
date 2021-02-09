@@ -30,6 +30,7 @@ namespace Implementation.Commands
             containerClient.SetMetadata(new Dictionary<string, string>());
             var metaData = new Dictionary<string, string>(1);
             metaData.Add("Project", request.ProjectName);
+            containerClient.SetMetadata(metaData);
             var blobClient = containerClient.GetBlobClient(request.Name);
             await blobClient.UploadAsync(request.Path, new BlobHttpHeaders { ContentType = request.Path.GetContentType() });
         }

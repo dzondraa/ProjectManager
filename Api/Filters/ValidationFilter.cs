@@ -34,7 +34,7 @@ namespace Api.Filters
                     }
                 }
 
-                context.Result = new BadRequestObjectResult(errorResponse);
+                //context.Result = new UnprocessableEntityObjectResult(errorResponse);
             }
 
             await next();
