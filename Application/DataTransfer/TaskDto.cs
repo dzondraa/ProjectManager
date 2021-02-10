@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -10,5 +11,6 @@ namespace Application.DataTransfer
         public string ProjectId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
+        public IEnumerable<DataModel> AdditionalFields { get; set; }
     }
 }
