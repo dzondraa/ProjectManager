@@ -7,9 +7,9 @@ namespace AzureTableDataAccess
 {
     public abstract class Entity : TableEntity
     {
-     
+
         // Soft delete option
-        public DateTime? DeletedAt { get; set; }
+        public bool Deleted { get; set; } = false;
 
         public Entity(string partitionKey, string rowKey)
         {

@@ -7,6 +7,7 @@ using Application;
 using Newtonsoft.Json;
 using Application.Exceptions;
 using FluentValidation;
+using Microsoft.WindowsAzure.Storage;
 
 namespace Api.Core
 {
@@ -28,9 +29,17 @@ namespace Api.Core
             catch (Exception ex)
             {
                 httpContext.Response.ContentType = "application/json";
-                object response = null;
+                object response = new {
+                    message = ex.Message
+                };
                 var statusCode = StatusCodes.Status500InternalServerError;
+                var type = ex.GetType();
+                
+                if(ex.Message.Contains("not exist"))
+                {
+                    statusCode = StatusCodes.Status404NotFound;
 
+                }
                 switch (ex)
                 {
       
@@ -41,6 +50,9 @@ namespace Api.Core
                             message = "Resource not found."
                         };
                         break;
+
+
+
                     case ValidationException validationException:
                         statusCode = StatusCodes.Status422UnprocessableEntity;
 
@@ -55,6 +67,8 @@ namespace Api.Core
                             })
                         };
                         break;
+
+
                 }
 
                 httpContext.Response.StatusCode = statusCode;

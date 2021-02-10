@@ -11,5 +11,11 @@ namespace Application.Exceptions
         {
             
         }
+
+        public EntityNotFoundException(string name)
+            : base($"Entity with name $'{name}' could not be found")
+        {
+
+        }
     }
 }
