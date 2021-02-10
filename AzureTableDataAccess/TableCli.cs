@@ -35,6 +35,19 @@ namespace AzureTableDataAccess
             return insertedEntity;
         }
 
+        public async Task InsertDynamicEntity(DynamicTableEntity entity)
+        {
+            try
+            {
+                var insertOperation = TableOperation.Insert(entity);
+                await table.ExecuteAsync(insertOperation);
+            }
+            catch (Exception ExceptionObj)
+            {
+                throw ExceptionObj;
+            }
+        }
+
         public async Task<TableEntity> MergeEntityAsync(TableEntity entity)
         {
             entity.ETag = "*";

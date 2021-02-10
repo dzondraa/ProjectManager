@@ -2,9 +2,14 @@
 using Application.DataTransfer;
 using AzureTableDataAccess;
 using AzureTableDataAccess.Entities;
+using Microsoft.Azure.Cosmos.Table;
+using Microsoft.Azure.Documents.SystemFunctions;
 using System;
 using System.Collections.Generic;
+using System.Net.Sockets;
+using System.Reflection;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace Implementation.Commands
@@ -22,16 +27,56 @@ namespace Implementation.Commands
 
         public string Name => "Create task asyncronously";
 
+
+        public static dynamic toEntityValue(JsonElement value)
+        {
+            var type = value.ValueKind;
+            switch (type)
+            {
+                case JsonValueKind.Number:
+                    return value.GetDouble();
+                case JsonValueKind.String:
+                    return value.GetString();
+                case JsonValueKind.True:
+                    return true;
+                case JsonValueKind.False:
+                    return false;
+            }
+            return null;
+        }
+
         public async Task Execute(TaskDto request)
         {
-            var date = DateTime.Now;
-            await _tableCli.InsertOrMergeEntityAsync(new Tasks 
+            var guid = Guid.NewGuid().ToString();
+            var hasAdditionalFields = request.AdditionalFields != null;
+            if (hasAdditionalFields)
             {
-                PartitionKey = request.ProjectId,
-                RowKey = Guid.NewGuid().ToString(),
-                Description = request.Description,
-                Name = request.Name
-            });
+                var dynTableEntity = new DynamicTableEntity(request.ProjectId, guid);
+
+                dynTableEntity.Properties.Add("Description", new EntityProperty(request.Description));
+                dynTableEntity.Properties.Add("Name", new EntityProperty(request.Name));
+
+                foreach (var prop in request.AdditionalFields)
+                {
+                    // Better approach:
+                    // - Using reflection
+                    // - Create class/method which is able to create DynamicTableEntity from TableEntity and just add addidional fields
+                    dynTableEntity.Properties.Add(prop.Name, new EntityProperty(toEntityValue(prop.Value)));
+                }
+
+                await _tableCli.InsertDynamicEntity(dynTableEntity);
+
+            } else
+            {
+                await _tableCli.InsertOrMergeEntityAsync(new Tasks
+                {
+                    PartitionKey = request.ProjectId,
+                    RowKey = guid,
+                    Description = request.Description,
+                    Name = request.Name
+                });
+            }
+            
         }
     }
 }
