@@ -32,7 +32,7 @@ namespace AzureTableDataAccess
             var task = GetEntity<Project>(partitionId, rowId);
             task.Wait();
             var res = task.Result;
-            return false;
+            return res == null ? false : true;
         }
 
         public async Task<TableEntity> InsertOrMergeEntityAsync(TableEntity entity)
