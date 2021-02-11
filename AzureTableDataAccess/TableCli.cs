@@ -1,5 +1,6 @@
 ﻿using AzureTableDataAccess.Entities;
 using Microsoft.Azure.Cosmos.Table;
+using Microsoft.Azure.Documents.SystemFunctions;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -24,6 +25,14 @@ namespace AzureTableDataAccess
             {
                 // Logg ex
             }
+        }
+
+        public bool EntityExists(string partitionId, string rowId)
+        {
+            var task = GetEntity<Project>(partitionId, rowId);
+            task.Wait();
+            var res = task.Result;
+            return false;
         }
 
         public async Task<TableEntity> InsertOrMergeEntityAsync(TableEntity entity)

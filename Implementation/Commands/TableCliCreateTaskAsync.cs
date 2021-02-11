@@ -2,10 +2,13 @@
 using Application.DataTransfer;
 using AzureTableDataAccess;
 using AzureTableDataAccess.Entities;
+using FluentValidation;
+using Implementation.Validatiors;
 using Microsoft.Azure.Cosmos.Table;
 using Microsoft.Azure.Documents.SystemFunctions;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Net.Sockets;
 using System.Reflection;
 using System.Text;
@@ -17,10 +20,12 @@ namespace Implementation.Commands
     public class TableCliCreateTaskAsync : ICreateTaskCommandAsync
     {
         private readonly TableCli _tableCli;
+        private readonly TaskRequestValidatior _validatior;
 
-        public TableCliCreateTaskAsync()
+        public TableCliCreateTaskAsync(TaskRequestValidatior validator)
         {
             _tableCli = new TableCli(AzureStorageConnection.Instance(), "Tasks");
+            _validatior = validator;
         }
 
         public int Id => 221;
@@ -47,6 +52,7 @@ namespace Implementation.Commands
 
         public async Task Execute(TaskDto request)
         {
+            _validatior.ValidateAndThrow(request);
             var guid = Guid.NewGuid().ToString();
             var hasAdditionalFields = request.AdditionalFields != null;
             if (hasAdditionalFields)

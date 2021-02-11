@@ -11,7 +11,9 @@ namespace Implementation.Validatiors
         public ProjectRequestValidator()
         {
             RuleFor(x => x.Name)
-                .NotEmpty();
+                .NotEmpty()
+                .MinimumLength(5)
+                .MaximumLength(25);
         }
     }
 }
