@@ -4,6 +4,7 @@ using Application.DataTransfer;
 using Application.Queries;
 using Azure.Storage.Blobs.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Azure.Management.BatchAI.Fluent.Models;
 using Microsoft.Azure.Management.ResourceManager.Fluent.Core.ResourceActions;
 using System;
 using System.Collections.Generic;
@@ -45,9 +46,14 @@ namespace Api.Controllers
 
         // POST api/<File>
         [HttpPost]
-        public async void Post([FromBody] FileDto request, [FromServices] IUploadFileCommandAsync command)
+        public async Task<IActionResult> Post([FromBody] FileDto request, [FromServices] IUploadFileCommandAsync command)
         {
+            if (!System.IO.File.Exists(request.Path)) return BadRequest(new
+            {
+                message = "Please provide a valid file path!"
+            });
             await _executor.ExecuteCommandAsync(command, request);
+            return Ok("File uploaded");
         }
 
         // PUT api/<File>/5

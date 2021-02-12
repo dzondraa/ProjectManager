@@ -8,6 +8,7 @@ using Newtonsoft.Json;
 using Application.Exceptions;
 using FluentValidation;
 using Microsoft.WindowsAzure.Storage;
+using System.IO;
 
 namespace Api.Core
 {
@@ -67,6 +68,15 @@ namespace Api.Core
                             })
                         };
                         break;
+
+                    case FileNotFoundException _:
+                        statusCode = 400;
+                        response = new
+                        {
+                            message = "Please provide a valid file path (.zip)"
+                        };
+                        break;
+
 
 
                 }

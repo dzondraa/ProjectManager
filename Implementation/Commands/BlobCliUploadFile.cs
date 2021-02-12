@@ -3,8 +3,10 @@ using Application.DataTransfer;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using Implementation.Core;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -31,8 +33,10 @@ namespace Implementation.Commands
             var metaData = new Dictionary<string, string>(1);
             metaData.Add("Project", request.ProjectName);
             containerClient.SetMetadata(metaData);
+            if (!File.Exists(request.Path)) throw new FileNotFoundException("asd");
             var blobClient = containerClient.GetBlobClient(request.Name);
             await blobClient.UploadAsync(request.Path, new BlobHttpHeaders { ContentType = request.Path.GetContentType() });
+            
         }
     }
 }
