@@ -39,6 +39,10 @@ namespace Api.Core
                 if(ex.Message.Contains("not exist"))
                 {
                     statusCode = StatusCodes.Status404NotFound;
+                    response = new
+                    {
+                        message = "Resource not found."
+                    };
 
                 }
                 switch (ex)

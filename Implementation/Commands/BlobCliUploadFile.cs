@@ -30,13 +30,13 @@ namespace Implementation.Commands
             var containerClient = _blobServiceClient.GetBlobContainerClient("code");
             // Clearing the metadata field
             containerClient.SetMetadata(new Dictionary<string, string>());
-            var metaData = new Dictionary<string, string>(1);
-            metaData.Add("Project", request.ProjectName);
-            containerClient.SetMetadata(metaData);
             if (!File.Exists(request.Path)) throw new FileNotFoundException("asd");
             var blobClient = containerClient.GetBlobClient(request.Name);
+            var metaData = new Dictionary<string, string>(1);
+            metaData.Add("Project", request.ProjectName);
+            //blobClient.SetMetadata(metaData);
             await blobClient.UploadAsync(request.Path, new BlobHttpHeaders { ContentType = request.Path.GetContentType() });
-            
+            blobClient.SetMetadata(metaData);
         }
     }
 }
