@@ -77,17 +77,19 @@ namespace AzureTableDataAccess
             return deletedEntity;
         }
 
-        public async Task<TableEntity> GetSingleEntity<T>(string partitionKey, string rowKey) where T : TableEntity
+        public async Task<Entity> GetSingleEntity<T>(string partitionKey, string rowKey) where T : TableEntity
         {
-            return await GetEntity<T>(partitionKey, rowKey);
+            return await GetEntity<T>(partitionKey, rowKey) as Entity;
         }
 
 
-        private async Task<TableEntity> GetEntity<T>(string partitionKey, string rowKey) where T : ITableEntity
+        private async Task<Entity> GetEntity<T>(string partitionKey, string rowKey) where T : TableEntity
         {
             TableOperation retrieveOperation = TableOperation.Retrieve<T>(partitionKey, rowKey);
             TableResult result = await table.ExecuteAsync(retrieveOperation);
-            TableEntity entity = result.Result as TableEntity;
+            if (result.HttpStatusCode == 404) throw new Exception("not exist");
+            Entity entity = result.Result as Entity;
+            if (entity.Deleted) throw new Exception("not exist");
             return entity;
         }
 

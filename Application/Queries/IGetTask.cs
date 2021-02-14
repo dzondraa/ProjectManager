@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Application.Queries
 {
-    public interface IGetTask : IQuery<TaskDto, PagedResponse<Tasks>>
+    public interface IGetTask : IQuery<TaskDto, Tasks>
     {
     }
 }

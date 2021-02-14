@@ -46,6 +46,7 @@ namespace Implementation.Commands
 
                 dynTableEntity.Properties.Add("Description", new EntityProperty(request.Description));
                 dynTableEntity.Properties.Add("Name", new EntityProperty(request.Name));
+                dynTableEntity.Properties.Add("Deleted", new EntityProperty(false));
 
                 foreach (var prop in request.AdditionalFields)
                 {
@@ -64,7 +65,8 @@ namespace Implementation.Commands
                     PartitionKey = request.ProjectId,
                     RowKey = guid,
                     Description = request.Description,
-                    Name = request.Name
+                    Name = request.Name,
+                    Deleted = false
                 });
             }
             

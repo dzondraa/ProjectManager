@@ -18,15 +18,24 @@ namespace Api.Core
 
         public async Task Invoke(HttpContext httpContext)
         {
-            if(httpContext.Request.Method == "PUT")
+            if(
+                (httpContext.Request.Method == "PUT" 
+                || httpContext.Request.Method == "GET") 
+                && httpContext.Request.RouteValues.ContainsKey("id")
+            )
             {
-                var values = httpContext.Request.RouteValues;
-                if(!values["id"].ToString().Contains("$"))
+                
+                if(!httpContext.Request.RouteValues["id"].ToString().Contains("$"))
                 {
-                    httpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                    httpContext.Response.StatusCode = (int)HttpStatusCode.NotFound;
                     return;
                 }
+                
+               
+                await _next(httpContext);
+                return;
             }
+            await _next(httpContext);
         }
 
     }

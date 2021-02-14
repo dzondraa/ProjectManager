@@ -29,13 +29,12 @@ namespace Implementation.Queries
             _tableCli = new TableCli(AzureStorageConnection.Instance(), "Projects");
         }
 
-        public PagedResponse<Project> Execute(ProjectDto search)
+        public Project Execute(ProjectDto search)
         {
             var tableEntity = _mapper.Map<Project>(search);
-            var query = _tableCli.table
-                .CreateQuery<Project>()
-                .Where(x => x.PartitionKey == tableEntity.PartitionKey && x.RowKey == tableEntity.RowKey);
-            return query.ToPagedResponse();
+            var task = _tableCli.GetSingleEntity<Project>(tableEntity.PartitionKey, tableEntity.RowKey);
+            task.Wait();
+            return task.Result as Project;
         }
     }
 }

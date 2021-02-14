@@ -34,7 +34,7 @@ namespace Implementation.Commands
             _validator.ValidateAndThrow(request);
             var date = DateTime.Now;
             var partitionId = date.Year.ToString() + "-" + date.Month.ToString();
-            await _tableCli.InsertOrMergeEntityAsync(new Project(partitionId, Guid.NewGuid().ToString(), request.Name));
+            await _tableCli.InsertOrMergeEntityAsync(new Project(partitionId, Guid.NewGuid().ToString(), request.Name) { Deleted = false});
         }
 
     }

@@ -8,6 +8,7 @@ using AutoMapper;
 using AzureTableDataAccess.Entities;
 using Application.Commands;
 using Application.Requests;
+using Microsoft.Azure.Documents.SystemFunctions;
 
 namespace Implementation.Commands
 {
@@ -29,9 +30,12 @@ namespace Implementation.Commands
         public async Task Execute(ProjectDto request)
         {
             // mapping to DataAccess object
-            if (!request.Id.Contains('$')) throw new Exception("not exist");
+            //if (!request.Id.Contains('$')) throw new Exception("not exist");
             var projectEntity = _mapper.Map<Project>(request);
+            var contextRecord = await _tableCli.GetSingleEntity<Project>(projectEntity.PartitionKey, projectEntity.RowKey);
+            //if (contextRecord.Deleted) throw new Exception("not exist");
             await _tableCli.MergeEntityAsync(projectEntity);
+            
         }
     }
 }

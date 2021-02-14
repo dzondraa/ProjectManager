@@ -21,6 +21,11 @@ namespace AzureTableDataAccess
         {
 
         }
+
+        public bool isDeleted()
+        {
+            return this.Deleted;
+        }
     }
 
  
