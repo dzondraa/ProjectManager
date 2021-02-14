@@ -14,6 +14,7 @@ using System.Reflection;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Implementation.Core;
 
 namespace Implementation.Commands
 {
@@ -67,7 +68,7 @@ namespace Implementation.Commands
                     // Better approach:
                     // - Using reflection
                     // - Create class/method which is able to create DynamicTableEntity from TableEntity and just add addidional fields
-                    dynTableEntity.Properties.Add(prop.Name, new EntityProperty(toEntityValue(prop.Value)));
+                    dynTableEntity.Properties.Add(prop.Name, new EntityProperty(Helper.toEntityValue(prop.Value)));
                 }
 
                 await _tableCli.InsertDynamicEntity(dynTableEntity);

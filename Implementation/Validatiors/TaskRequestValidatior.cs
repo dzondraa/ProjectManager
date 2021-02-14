@@ -26,10 +26,15 @@ namespace Implementation.Validatiors
                 .NotEmpty()
                 .MinimumLength(10)
                 .MaximumLength(200);
-            RuleFor(t => t.ProjectId).Must(p => p.Contains('$')).WithMessage("Not a valid project Id");
-            RuleFor(t => t)
-                .Must(p => tableCli.EntityExists(p.ProjectId.Split('$')[0], p.ProjectId.Split('$')[1]))
-                .WithMessage(p => $"Project with id '{p.ProjectId}' not found.");
+            RuleFor(t => t.ProjectId)
+                .Must(id => id.Contains("$"))
+                .WithMessage("Not a valid ID")
+                .DependentRules(() =>
+                {
+                    RuleFor(p => p).Must(p => tableCli.EntityExists(p.ProjectId.Split('$')[0], p.ProjectId.Split('$')[1]))
+                   .WithMessage(p => $"Project with id '{p.ProjectId}' not found.");
+
+                });
         }
     }
 }
