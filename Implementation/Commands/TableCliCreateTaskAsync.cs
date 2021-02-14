@@ -34,23 +34,6 @@ namespace Implementation.Commands
         public string Name => "Create task asyncronously";
 
 
-        public static dynamic toEntityValue(JsonElement value)
-        {
-            var type = value.ValueKind;
-            switch (type)
-            {
-                case JsonValueKind.Number:
-                    return value.GetDouble();
-                case JsonValueKind.String:
-                    return value.GetString();
-                case JsonValueKind.True:
-                    return true;
-                case JsonValueKind.False:
-                    return false;
-            }
-            return null;
-        }
-
         public async Task Execute(TaskDto request)
         {
             _validatior.ValidateAndThrow(request);
