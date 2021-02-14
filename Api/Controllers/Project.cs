@@ -3,6 +3,8 @@ using Application;
 using Application.Commands;
 using Application.DataTransfer;
 using Application.Queries;
+using Application.Requests;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -18,9 +20,11 @@ namespace Api.Controllers
     public class Project : ControllerBase
     {
         private readonly UseCaseExecutor _executor;
+        private readonly IMapper _mapper;
 
-        public Project(UseCaseExecutor executor)
+        public Project(UseCaseExecutor executor, IMapper mapper)
         {
+            _mapper = mapper;
             _executor = executor;
         }
 
@@ -41,7 +45,7 @@ namespace Api.Controllers
 
         // POST api/<Project>
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] ProjectDto dto, [FromServices] ICreateProjectCommandAsync command)
+        public async Task<IActionResult> Post([FromBody] ProjectRequest dto, [FromServices] ICreateProjectCommandAsync command)
         {
             await _executor.ExecuteCommandAsync(command, dto);
             return Ok();
@@ -49,10 +53,11 @@ namespace Api.Controllers
 
         // PUT api/<Project>/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(string id, [FromBody] ProjectDto dto, [FromServices] IUpdateProjectCommandAsync command)
+        public async Task<IActionResult> Put(string id, [FromBody] ProjectRequest request, [FromServices] IUpdateProjectCommandAsync command)
         {
-            dto.Id = id;
-            await _executor.ExecuteCommandAsync(command, dto);
+            var reqestAsDto = _mapper.Map<ProjectDto>(request);
+            reqestAsDto.Id = id;
+            await _executor.ExecuteCommandAsync(command, reqestAsDto);
             return Ok();
         }
 

@@ -95,6 +95,7 @@ namespace Api
 
             app.UseRouting();
             app.UseMiddleware<GlobalExceptionHandler>();
+            app.UseMiddleware<GlobalIdValidator>();
 
 
             app.UseAuthorization();

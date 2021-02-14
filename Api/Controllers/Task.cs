@@ -3,7 +3,9 @@ using Application;
 using Application.Commands;
 using Application.DataTransfer;
 using Application.Queries;
+using Application.Requests;
 using Application.Searches;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -19,9 +21,10 @@ namespace Api.Controllers
     public class Task  : ControllerBase
     {
         private readonly UseCaseExecutor _executor;
-
-        public Task(UseCaseExecutor executor)
+        private readonly IMapper _mapper;
+        public Task(UseCaseExecutor executor, IMapper mapper)
         {
+            _mapper = mapper;
             _executor = executor;
         }
 
@@ -42,19 +45,20 @@ namespace Api.Controllers
 
         // POST api/<Task>
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] TaskDto dto, [FromServices] ICreateTaskCommandAsync command)
+        public async Task<IActionResult> Post([FromBody] TaskRequest request, [FromServices] ICreateTaskCommandAsync command)
         {
-            await _executor.ExecuteCommandAsync(command, dto);
+            await _executor.ExecuteCommandAsync(command, request);
             return Ok();
         }
 
         // PUT api/<Task>/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(string id, [FromBody] TaskDto dto, [FromServices] IUpdateTaskAsync command)
+        public async Task<IActionResult> Put(string id, [FromBody] TaskRequest request, [FromServices] IUpdateTaskAsync command)
         {
-            dto.Id = id.Split("$")[1];
-            dto.ProjectId = id.Split("$")[0];
-            await _executor.ExecuteCommandAsync(command, dto);
+            var requestAsDto = _mapper.Map<TaskDto>(request);
+            requestAsDto.Id = id.Split("$")[1];
+            requestAsDto.ProjectId = id.Split("$")[0];
+            await _executor.ExecuteCommandAsync(command, requestAsDto);
             return Ok();
         }
 

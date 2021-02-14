@@ -1,4 +1,5 @@
 ﻿using Application.DataTransfer;
+using Application.Requests;
 using AutoMapper;
 using AzureTableDataAccess.Entities;
 using System;
@@ -23,6 +24,7 @@ namespace Api.Profiles
                     opt => opt.MapFrom(src => src.Id.Split('$', StringSplitOptions.None)[1]
                     ))
                 .ReverseMap();
+            CreateMap<ProjectDto, ProjectRequest>().ReverseMap();
 
         }
     }

@@ -1,6 +1,7 @@
 ﻿using Application;
 using Application.Commands;
 using Application.DataTransfer;
+using Application.Requests;
 using AzureTableDataAccess;
 using AzureTableDataAccess.Entities;
 using FluentValidation;
@@ -28,7 +29,7 @@ namespace Implementation.Commands
             _validator = validator;
         }
 
-        public async System.Threading.Tasks.Task Execute(ProjectDto request)
+        public async System.Threading.Tasks.Task Execute(ProjectRequest request)
         {
             _validator.ValidateAndThrow(request);
             var date = DateTime.Now;

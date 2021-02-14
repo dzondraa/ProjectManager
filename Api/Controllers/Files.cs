@@ -2,6 +2,7 @@
 using Application.Commands;
 using Application.DataTransfer;
 using Application.Queries;
+using Application.Requests;
 using Azure.Storage.Blobs.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Management.BatchAI.Fluent.Models;
@@ -46,7 +47,7 @@ namespace Api.Controllers
 
         // POST api/<File>
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] FileDto request, [FromServices] IUploadFileCommandAsync command)
+        public async Task<IActionResult> Post([FromBody] FileRequest request, [FromServices] IUploadFileCommandAsync command)
         {
             if (!System.IO.File.Exists(request.Path)) return BadRequest(new
             {

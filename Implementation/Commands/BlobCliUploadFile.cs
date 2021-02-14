@@ -1,5 +1,6 @@
 ﻿using Application.Commands;
 using Application.DataTransfer;
+using Application.Requests;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using Implementation.Core;
@@ -25,7 +26,7 @@ namespace Implementation.Commands
             _blobServiceClient = blobServiceClient;
         }
 
-        public async Task Execute(FileDto request)
+        public async Task Execute(FileRequest request)
         {
             var containerClient = _blobServiceClient.GetBlobContainerClient("code");
             // Clearing the metadata field

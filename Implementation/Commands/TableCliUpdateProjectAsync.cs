@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using AzureTableDataAccess.Entities;
 using Application.Commands;
+using Application.Requests;
 
 namespace Implementation.Commands
 {
@@ -28,6 +29,7 @@ namespace Implementation.Commands
         public async Task Execute(ProjectDto request)
         {
             // mapping to DataAccess object
+            if (!request.Id.Contains('$')) throw new Exception("not exist");
             var projectEntity = _mapper.Map<Project>(request);
             await _tableCli.MergeEntityAsync(projectEntity);
         }

@@ -15,6 +15,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Implementation.Core;
+using Application.Requests;
 
 namespace Implementation.Commands
 {
@@ -34,7 +35,7 @@ namespace Implementation.Commands
         public string Name => "Create task asyncronously";
 
 
-        public async Task Execute(TaskDto request)
+        public async Task Execute(TaskRequest request)
         {
             _validatior.ValidateAndThrow(request);
             var guid = Guid.NewGuid().ToString();

@@ -1,8 +1,10 @@
 ﻿using Application.Commands;
 using Application.DataTransfer;
+using Application.Requests;
 using AutoMapper;
 using AzureTableDataAccess;
 using AzureTableDataAccess.Entities;
+using Implementation.Validatiors;
 using System;
 using System.Collections.Generic;
 using System.Text;

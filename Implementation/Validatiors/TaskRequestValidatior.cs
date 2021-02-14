@@ -1,4 +1,5 @@
 ﻿using Application.DataTransfer;
+using Application.Requests;
 using AzureTableDataAccess;
 using AzureTableDataAccess.Entities;
 using FluentValidation;
@@ -10,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Implementation.Validatiors
 {
-    public class TaskRequestValidatior : AbstractValidator<TaskDto>
+    public class TaskRequestValidatior : AbstractValidator<TaskRequest>
     {
         private readonly TableCli tableCli;
 
