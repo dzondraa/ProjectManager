@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Application.Queries
 {
-    public interface IGetProject : IQuery<ProjectDto, Project>
+    public interface IGetProject : IQuery<ProjectDto, ProjectDto>
     {
     }
 }

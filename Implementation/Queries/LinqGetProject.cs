@@ -29,12 +29,13 @@ namespace Implementation.Queries
             _tableCli = new TableCli(AzureStorageConnection.Instance(), "Projects");
         }
 
-        public Project Execute(ProjectDto search)
+        public ProjectDto Execute(ProjectDto search)
         {
             var tableEntity = _mapper.Map<Project>(search);
             var task = _tableCli.GetSingleEntity<Project>(tableEntity.PartitionKey, tableEntity.RowKey);
             task.Wait();
-            return task.Result as Project;
+            var result = task.Result as Project;
+            return _mapper.Map<ProjectDto>(result);
         }
     }
 }

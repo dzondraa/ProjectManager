@@ -28,12 +28,13 @@ namespace Implementation.Queries
             _tableCli = new TableCli(AzureStorageConnection.Instance(), "Tasks");
         }
 
-        public Tasks Execute(TaskDto search)
+        public TaskDto Execute(TaskDto search)
         {
             var tableEntity = _mapper.Map<Tasks>(search);
             var task = _tableCli.GetSingleEntity<Tasks>(tableEntity.PartitionKey, tableEntity.RowKey);
             task.Wait();
-            return task.Result as Tasks;
+            var result = task.Result as Tasks;
+            return _mapper.Map<TaskDto>(result);
         }
 
     }

@@ -22,9 +22,14 @@ namespace Api.Profiles
                 .ForMember(dest =>
                     dest.RowKey,
                     opt => opt.MapFrom(src => src.Id.Split('$', StringSplitOptions.None)[1]
-                    ))
-                .ReverseMap();
-            CreateMap<ProjectDto, ProjectRequest>().ReverseMap();
+                    ));
+            CreateMap<Project, ProjectDto>()
+               .ForMember(dest =>
+                   dest.Id,
+                   opt => opt.MapFrom(src => src.PartitionKey + '$' + src.RowKey)
+                   );
+               
+
 
         }
     }

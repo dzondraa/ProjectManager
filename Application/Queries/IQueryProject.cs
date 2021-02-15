@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Application.Queries
 {
-    public interface IQueryProject : IQuery<ProjectSearch, PagedResponse<Project>>
+    public interface IQueryProject : IQuery<ProjectSearch, PagedResponse<ProjectDto>>
     {
     }
 }

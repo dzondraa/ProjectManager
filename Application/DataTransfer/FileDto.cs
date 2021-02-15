@@ -9,5 +9,6 @@ namespace Application.DataTransfer
         public string Name { get; set; }
         public string Path { get; set; }
         public string ProjectName { get; set; }
+        public string Timestamp { get; } = DateTime.Now.ToString();
     }
 }

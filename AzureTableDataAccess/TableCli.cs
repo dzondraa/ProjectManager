@@ -3,6 +3,7 @@ using Microsoft.Azure.Cosmos.Table;
 using Microsoft.Azure.Documents.SystemFunctions;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -29,6 +30,7 @@ namespace AzureTableDataAccess
 
         public bool EntityExists(string partitionId, string rowId)
         {
+
             var task = GetEntity<Project>(partitionId, rowId);
             task.Wait();
             var res = task.Result;
@@ -77,21 +79,28 @@ namespace AzureTableDataAccess
             return deletedEntity;
         }
 
-        public async Task<Entity> GetSingleEntity<T>(string partitionKey, string rowKey) where T : TableEntity
+        public async Task<Entity> GetSingleEntity<T>(string partitionKey, string rowKey) where T : Entity
         {
             return await GetEntity<T>(partitionKey, rowKey) as Entity;
         }
 
 
-        private async Task<Entity> GetEntity<T>(string partitionKey, string rowKey) where T : TableEntity
+        private async Task<Entity> GetEntity<T>(string partitionKey, string rowKey) where T : Entity
         {
             TableOperation retrieveOperation = TableOperation.Retrieve<T>(partitionKey, rowKey);
             TableResult result = await table.ExecuteAsync(retrieveOperation);
             if (result.HttpStatusCode == 404) throw new Exception("not exist");
             Entity entity = result.Result as Entity;
-            if (entity.Deleted) throw new Exception("not exist");
+            if (entity.Deleted) throw new Exception("Resource was deleted");
             return entity;
         }
+
+        //public async Task<Entity> GetEntities<T>() where T : TableEntity
+        //{
+        //    IQueryable<Project> query;
+        //    query = table.CreateQuery<Project>();
+        //    return await GetEntity<T>(partitionKey, rowKey) as Entity;
+        //}
 
 
     }

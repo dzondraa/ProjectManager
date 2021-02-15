@@ -8,5 +8,7 @@ namespace Application.DataTransfer
     {
         public string Id { get; set; }
         public string Name { get; set; }
+        public string Timestamp { get; } = DateTime.Now.ToString();
+
     }
 }

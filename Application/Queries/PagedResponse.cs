@@ -8,6 +8,6 @@ namespace Application.Queries
     public class PagedResponse<T>
     {
         public int TotalCount { get; set; }
-        public IEnumerable<T> Items { get; set; }
+        public List<T> Items { get; set; }
     }
 }

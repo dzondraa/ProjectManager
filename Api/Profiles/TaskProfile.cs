@@ -20,8 +20,17 @@ namespace Api.Profiles
                 .ForMember(dest =>
                     dest.RowKey,
                     opt => opt.MapFrom(src => src.Id
-                    ))
-                .ReverseMap();
+                    ));
+            CreateMap<Tasks, TaskDto>()
+            .ForMember(dest =>
+                dest.Id,
+                opt => opt.MapFrom(src => src.PartitionKey + '$' + src.RowKey)
+                )
+            .ForMember(dest =>
+                dest.ProjectId,
+                opt => opt.MapFrom(src => src.PartitionKey)
+                );
+         
 
         }
     }

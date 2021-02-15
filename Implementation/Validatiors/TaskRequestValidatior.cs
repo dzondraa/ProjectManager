@@ -17,7 +17,7 @@ namespace Implementation.Validatiors
 
         public TaskRequestValidatior()
         {
-           tableCli =  new TableCli(AzureStorageConnection.Instance(), "Tasks");
+           tableCli =  new TableCli(AzureStorageConnection.Instance(), "Projects");
             RuleFor(t => t.Name)
                 .NotEmpty()
                 .MinimumLength(5)

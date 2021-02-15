@@ -3,6 +3,7 @@ using Application;
 using Application.DataTransfer;
 using Application.Queries;
 using Application.Searches;
+using AutoMapper;
 using AzureTableDataAccess;
 using AzureTableDataAccess.Entities;
 using Implementation.Core;
@@ -21,16 +22,19 @@ namespace Implementation.Queries
     public class TableCliQueryTask : IQueryTask
     {
         private readonly TableCli _tableCli;
+        private readonly IMapper _mapper;
+
         public int Id => 3;
 
         public string Name => "Querying tasks data using Table client";
 
-        public TableCliQueryTask()
+        public TableCliQueryTask(IMapper mapper)
         {
+            _mapper = mapper;
             _tableCli = new TableCli(AzureStorageConnection.Instance(), "Tasks");
         }
 
-        public PagedResponse<AzureTableDataAccess.Entities.Tasks> Execute(TaskSearch search)
+        public PagedResponse<TaskDto> Execute(TaskSearch search)
         {
             IQueryable<AzureTableDataAccess.Entities.Tasks> query;
             query = _tableCli.table.CreateQuery<AzureTableDataAccess.Entities.Tasks>();
@@ -41,7 +45,10 @@ namespace Implementation.Queries
             if (!String.IsNullOrWhiteSpace(search.Description))
                 query = query.Where(x => x.Name == search.Name);
 
-            return query.ToPagedResponse();
+            var result = query.ToList();
+            query = query.Where(x => !x.Deleted);
+            List<TaskDto> mapped = _mapper.Map<List<Tasks>, List<TaskDto>>(result);
+            return mapped.ToPagedResponse();
         }
     }
 }

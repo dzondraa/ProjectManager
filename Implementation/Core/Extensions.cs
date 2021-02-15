@@ -1,4 +1,5 @@
 ﻿using Api.Searches;
+using Application.DataTransfer;
 using Application.Queries;
 using AutoMapper;
 using AzureTableDataAccess;
@@ -17,11 +18,8 @@ namespace Implementation.Core
 
         // T -> DTO object
         // L -> Paged response object - formated for representation
-        public static PagedResponse<T> ToPagedResponse<T>(this IQueryable<T> query)
-            where T : Entity
+        public static PagedResponse<T> ToPagedResponse<T>(this List<T> items)
         {
-            query = query.Where(x => !x.Deleted);
-            var items = query.ToList();
 
             var response = new PagedResponse<T>
             {
