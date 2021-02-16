@@ -55,10 +55,9 @@ namespace Api.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(string id, [FromBody] TaskRequest request, [FromServices] IUpdateTaskAsync command)
         {
-            var requestAsDto = _mapper.Map<TaskDto>(request);
-            requestAsDto.Id = id.Split("$")[1];
-            requestAsDto.ProjectId = id.Split("$")[0];
-            await _executor.ExecuteCommandAsync(command, requestAsDto);
+
+            request.SetId(id);
+            await _executor.ExecuteCommandAsync(command, request);
             return Ok();
         }
 

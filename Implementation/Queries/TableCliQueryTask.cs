@@ -44,6 +44,8 @@ namespace Implementation.Queries
 
             if (!String.IsNullOrWhiteSpace(search.Description))
                 query = query.Where(x => x.Name == search.Name);
+            if (!String.IsNullOrWhiteSpace(search.ProjectId))
+                query = query.Where(x => x.PartitionKey == search.ProjectId);
 
             var result = query.ToList();
             query = query.Where(x => !x.Deleted);

@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Application.Commands
 {
-    public interface IUpdateTaskAsync : ICommandAsync<TaskDto>
+    public interface IUpdateTaskAsync : ICommandAsync<TaskRequest>
     {
     }
 }
