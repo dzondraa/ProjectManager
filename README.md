@@ -22,7 +22,7 @@ Applicaiton uses Azure Storage SDK to communicate with the Azure Storage API to 
 
 ## API Documentation and JSON schemas - Swagger
 
-API documentation is auto generated and can be found here: http://localhost:5000/swagger
+API documentation is auto generated and can be found here: https://taskapiv1.azurewebsites.net/swagger/index.html
 
 ## Postman support
 ## Dependencies
