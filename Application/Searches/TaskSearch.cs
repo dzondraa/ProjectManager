@@ -11,6 +11,5 @@ namespace Application.Searches
 
         public string Name { get; set; }
         public string Description { get; set; }
-        public string Include { get; set; } = null;
     }
 }

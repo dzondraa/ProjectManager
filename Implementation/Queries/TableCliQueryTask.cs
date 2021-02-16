@@ -52,21 +52,20 @@ namespace Implementation.Queries
             List<TaskDto> mapped = _mapper.Map<List<Tasks>, List<TaskDto>>(result);
 
             // Only if consumers wants additional data, bacause it consuming more time to get additional data
-            if (!String.IsNullOrWhiteSpace(search.Include))
+            var counter = -1;
+            Parallel.ForEach(result, (singleTask) =>
             {
-                if (search.Include.ToLower() == "additionalfields")
-                    {
-                        var counter = -1;
-                        Parallel.ForEach(result, (singleTask) =>
-                        {
-                            counter++;
-                            var task = _tableCli.GetSingleDynamicEntity(singleTask.PartitionKey, singleTask.RowKey);
-                            task.Wait();
-                            var dto = Helper.toTaskDto(task.Result);
-                            mapped[counter].AdditionalFields = dto.AdditionalFields;
-                        });
-                }
-            }
+                // Get dynamic properties for each entity
+                counter++;
+                var task = _tableCli.GetSingleDynamicEntity(singleTask.PartitionKey, singleTask.RowKey);
+                task.Wait();
+                var dto = Helper.toTaskDto(task.Result);
+                mapped[counter].AdditionalFields = dto.AdditionalFields;
+            });
+            
+                   
+            
+            
           
             return mapped.ToPagedResponse();
         }
