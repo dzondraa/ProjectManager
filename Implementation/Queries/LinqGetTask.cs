@@ -2,6 +2,7 @@
 using Application.DataTransfer;
 using Application.Queries;
 using AutoMapper;
+using AutoMapper.Internal;
 using AzureTableDataAccess;
 using AzureTableDataAccess.Entities;
 using Implementation.Core;
@@ -10,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace Implementation.Queries
@@ -31,10 +33,11 @@ namespace Implementation.Queries
         public TaskDto Execute(TaskDto search)
         {
             var tableEntity = _mapper.Map<Tasks>(search);
-            var task = _tableCli.GetSingleEntity<Tasks>(tableEntity.PartitionKey, tableEntity.RowKey);
+            var task = _tableCli.GetSingleDynamicEntity(tableEntity.PartitionKey, tableEntity.RowKey);
+
             task.Wait();
-            var result = task.Result as Tasks;
-            return _mapper.Map<TaskDto>(result);
+            var result = task.Result;
+            return Helper.toTaskDto(result);
         }
 
     }

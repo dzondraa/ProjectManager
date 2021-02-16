@@ -84,6 +84,15 @@ namespace AzureTableDataAccess
             return await GetEntity<T>(partitionKey, rowKey) as Entity;
         }
 
+        public async Task<DynamicTableEntity> GetSingleDynamicEntity(string partitionKey, string rowKey)
+        {
+            TableOperation retrieveOperation = TableOperation.Retrieve(partitionKey, rowKey);
+            TableResult result = await table.ExecuteAsync(retrieveOperation);
+            if (result.HttpStatusCode == 404) throw new Exception("not exist");
+            DynamicTableEntity entity = result.Result as DynamicTableEntity;
+            return entity;
+        }
+
 
         private async Task<Entity> GetEntity<T>(string partitionKey, string rowKey) where T : Entity
         {

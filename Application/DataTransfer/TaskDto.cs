@@ -12,7 +12,7 @@ namespace Application.DataTransfer
         public string Name { get; set; }
         public string Description { get; set; }
         public IEnumerable<DataModel> AdditionalFields { get; set; } = null;
-        public string Timestamp { get; } = DateTime.Now.ToString();
+        public string Timestamp { get; set; } = DateTime.Now.ToString();
 
 
     }

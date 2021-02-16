@@ -39,7 +39,7 @@ namespace Api.Controllers
         [HttpGet("{id}")]
         public IActionResult Get(string id, [FromServices] IGetTask query)
         {
-            var result = _executor.ExecuteQuery(query, new TaskDto { Id = id.Split('$')[1], ProjectId = id.Split('$')[0] });
+            var result = _executor.ExecuteQuery(query, new TaskDto { Id = id.Split('$')[2], ProjectId = id.Split('$')[0] + "$" + id.Split('$')[1] });
             return Ok(result);
         }
 
