@@ -3,8 +3,10 @@ using Application.Queries;
 using Azure;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
+using Microsoft.WindowsAzure.Storage.Blob;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -25,13 +27,25 @@ namespace Implementation.Queries
 
         public async Task<FileInfo> Execute(FileDto search)
         {
+            
             var containerClient = _blobServiceClient.GetBlobContainerClient("code");
-            var blobClient = containerClient.GetBlobClient(search.Name);
+            var blobList = containerClient
+                .GetBlobs(BlobTraits.All)
+                .Where(p => p.Metadata["project"].ToString().ToLower() == search.ProjectName.ToLower())
+                .OrderByDescending(p => p.Properties.LastModified)
+                .ToList();
+
+            if (blobList.Count() == 0) throw new Exception("not exist");
+            var blobClient = containerClient.GetBlobClient(blobList[0].Name);
             var blobDownloadInfo = await blobClient.DownloadAsync();
-            return new FileInfo {
+            return new FileInfo
+            {
                 Content = blobDownloadInfo.Value.Content,
                 ContentType = blobDownloadInfo.Value.ContentType
             };
+
+
+
 
         }
     }

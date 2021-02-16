@@ -66,7 +66,7 @@ namespace Api.Controllers
         public async Task<IActionResult> Delete(string id, [FromServices] IDeleteTaskAsync command)
         {
 
-            await _executor.ExecuteCommandAsync(command, new TaskDto { Id = id.Split("$")[1], ProjectId = id.Split("$")[0] });
+            await _executor.ExecuteCommandAsync(command, new TaskDto { ProjectId = id.Split("$")[0] + "$" + id.Split("$")[1] , Id = id.Split("$")[2] });
             return Ok();
         }
     }
