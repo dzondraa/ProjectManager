@@ -47,9 +47,27 @@ namespace Implementation.Queries
             if (!String.IsNullOrWhiteSpace(search.ProjectId))
                 query = query.Where(x => x.PartitionKey == search.ProjectId);
 
-            var result = query.ToList();
             query = query.Where(x => !x.Deleted);
+            var result = query.ToList();
             List<TaskDto> mapped = _mapper.Map<List<Tasks>, List<TaskDto>>(result);
+
+            // Only if consumers wants additional data, bacause it consuming more time to get additional data
+            if (!String.IsNullOrWhiteSpace(search.Include))
+            {
+                if (search.Include.ToLower() == "additionalfields")
+                    {
+                        var counter = -1;
+                        Parallel.ForEach(result, (singleTask) =>
+                        {
+                            counter++;
+                            var task = _tableCli.GetSingleDynamicEntity(singleTask.PartitionKey, singleTask.RowKey);
+                            task.Wait();
+                            var dto = Helper.toTaskDto(task.Result);
+                            mapped[counter].AdditionalFields = dto.AdditionalFields;
+                        });
+                }
+            }
+          
             return mapped.ToPagedResponse();
         }
     }
