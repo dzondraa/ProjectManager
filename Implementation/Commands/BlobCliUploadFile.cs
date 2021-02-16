@@ -32,7 +32,7 @@ namespace Implementation.Commands
             // Clearing the metadata field
             containerClient.SetMetadata(new Dictionary<string, string>());
             if (!File.Exists(request.Path)) throw new FileNotFoundException("asd");
-            var blobClient = containerClient.GetBlobClient(request.Name);
+            var blobClient = containerClient.GetBlobClient(Guid.NewGuid().ToString() + '_' + request.Name);
             var metaData = new Dictionary<string, string>(1);
             metaData.Add("Project", request.ProjectName);
             //blobClient.SetMetadata(metaData);

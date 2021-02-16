@@ -28,19 +28,29 @@ namespace Api.Controllers
         {
             _executor = executor;
         }
-        // GET: api/<File>
+        //// GET: api/<File>
         //[HttpGet]
         //public IEnumerable<string> Get()
         //{
         //    return new string[] { "value1", "value2" };
         //}
 
-        // GET api/<File>/5
-        [HttpGet("{fileName}")]
-        public async Task<IActionResult> Get(string fileName, [FromServices] IGetCode query)
+        //// GET api/<File>/5
+        //[HttpGet("{fileName}")]
+        //public async Task<IActionResult> Get(string fileName, [FromServices] IGetCode query)
+        //{
+
+        //    var file = await _executor.ExecuteQueryAsync(query, new FileDto { Name = fileName });
+        //    return File(file.Content, file.ContentType);
+
+        //}
+
+        // GET api/<File>/download
+        [HttpGet("{projectName}")]
+        public async Task<IActionResult> Get(string projectName, [FromServices] IGetCode query)
         {
 
-            var file = await _executor.ExecuteQueryAsync(query, new FileDto { Name = fileName });
+            var file = await _executor.ExecuteQueryAsync(query, new FileDto { ProjectName = projectName });
             return File(file.Content, file.ContentType);
 
         }
