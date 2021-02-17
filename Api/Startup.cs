@@ -57,6 +57,8 @@ namespace Api
             // Validations
             services.AddTransient<ProjectRequestValidator>();
             services.AddTransient<TaskRequestValidatior>();
+            services.AddTransient<FileUploadValidator>();
+
 
 
             services.AddTransient<IUseCaseLogger, ConsoleUseCaseLogger>();

@@ -3,7 +3,9 @@ using Application.DataTransfer;
 using Application.Requests;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
+using FluentValidation;
 using Implementation.Core;
+using Implementation.Validatiors;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
@@ -16,18 +18,21 @@ namespace Implementation.Commands
     public class BlobCliUploadFile : IUploadFileCommandAsync
     {
         private readonly BlobServiceClient _blobServiceClient;
+        private readonly FileUploadValidator _validator;
 
         public int Id => 1211;
 
         public string Name => "Uploading code files from drive, using BlobCli";
 
-        public BlobCliUploadFile(BlobServiceClient blobServiceClient)
+        public BlobCliUploadFile(BlobServiceClient blobServiceClient, FileUploadValidator validator)
         {
+            _validator = validator;
             _blobServiceClient = blobServiceClient;
         }
 
         public async Task Execute(FileRequest request)
         {
+            _validator.ValidateAndThrow(request);
             var containerClient = _blobServiceClient.GetBlobContainerClient("code");
             // Clearing the metadata field
             containerClient.SetMetadata(new Dictionary<string, string>());
