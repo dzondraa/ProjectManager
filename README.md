@@ -1,4 +1,4 @@
-# EducationProject
+# Project Manager
 Backend platform (Domain driven design) based on CQRS (Command Query Responsibility Segregation) pattern and REST API - For storing project and task data with code
 
 This repository contains source code for:
