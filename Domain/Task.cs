@@ -11,6 +11,7 @@ namespace Domain
         public string Name { get; set; }
         public string Description { get; set; }
         public IEnumerable<Dictionary<string, object>> Properties { get; set; } = null;
+        public virtual Project Project { get; set; }
 
     }
 }

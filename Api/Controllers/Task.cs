@@ -39,7 +39,7 @@ namespace Api.Controllers
         [HttpGet("{id}")]
         public IActionResult Get(string id, [FromServices] IGetTask query)
         {
-            var result = _executor.ExecuteQuery(query, new TaskDto { Id = id.Split('$')[2], ProjectId = id.Split('$')[0] + "$" + id.Split('$')[1] });
+            var result = _executor.ExecuteQuery(query, BuildId(id));
             return Ok(result);
         }
 
@@ -66,8 +66,13 @@ namespace Api.Controllers
         public async Task<IActionResult> Delete(string id, [FromServices] IDeleteTaskAsync command)
         {
 
-            await _executor.ExecuteCommandAsync(command, new TaskDto { ProjectId = id.Split("$")[0] + "$" + id.Split("$")[1] , Id = id.Split("$")[2] });
+            await _executor.ExecuteCommandAsync(command, BuildId(id));
             return Ok();
+        }
+
+        private static TaskDto BuildId(string id)
+        {
+            return new TaskDto { ProjectId = id.Split("$")[0] + "$" + id.Split("$")[1], Id = id.Split("$")[2] };
         }
     }
 }
