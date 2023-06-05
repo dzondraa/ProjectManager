@@ -23,6 +23,8 @@ using Api.Validations;
 using Azure.Storage.Blobs;
 using Api.Core;
 using Implementation.Validatiors;
+using EFDataAccess;
+using Microsoft.EntityFrameworkCore;
 
 namespace Api
 {
@@ -38,6 +40,9 @@ namespace Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSingleton<ProjectManagementContext>();
+            services.AddScoped<ProjectManagementContext>();
+
             services.AddTransient<UseCaseExecutor>();
             // Projects services
             services.AddTransient<ICreateProjectCommandAsync, TableCliCreateProject>();
