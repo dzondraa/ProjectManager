@@ -1,10 +1,10 @@
 ﻿using Application.Queries;
 using Application.Searches;
 using Domain.Entities;
+using Implementation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
-using static EFDataAccess.ProjectManagementContext;
 
 namespace Api.Controllers
 {

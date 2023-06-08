@@ -7,32 +7,22 @@ using Implementation.Implementation;
 using Implementation.Queries;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using FluentValidation;
-using FluentValidation.AspNetCore;
-using Api.Filters;
-using Api.Validations;
 using Azure.Storage.Blobs;
 using Api.Core;
 using Implementation.Validatiors;
-using EFDataAccess;
-using Microsoft.EntityFrameworkCore;
 using Implementation.DependencyInjection;
-using static EFDataAccess.ProjectManagementContext;
 using Api.Jwt;
 using SocialNetwork.API.Jwt.TokenStorage;
 using SocialNetwork.API.Jwt;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using System.IdentityModel.Tokens.Jwt;
+using Implementation;
 
 namespace Api
 {
@@ -50,7 +40,7 @@ namespace Api
         {
             var appSettings = new AppSettings();
             Configuration.Bind(appSettings);
-
+            services.AddSingleton(appSettings);
             services.AddSingleton<ProjectManagementContextFactory>();
             //services.AddScoped<ProjectManagementContext>();
 

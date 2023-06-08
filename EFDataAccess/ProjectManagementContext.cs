@@ -36,30 +36,11 @@ namespace EFDataAccess
         {
         }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseSqlServer("Data Source=localhost\\SQLEXPRESS;Initial Catalog=Manager;Integrated Security=SSPI");
-            base.OnConfiguring(optionsBuilder);
-
-            optionsBuilder.EnableSensitiveDataLogging();
-        }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 
 
             base.OnModelCreating(modelBuilder);
-        }
-
-        public class ProjectManagementContextFactory : IDesignTimeDbContextFactory<ProjectManagementContext>
-        {
-            public ProjectManagementContext CreateDbContext(string[] args)
-            {
-                var optionsBuilder = new DbContextOptionsBuilder<ProjectManagementContext>();
-                optionsBuilder.UseSqlServer("Data Source=localhost\\SQLEXPRESS;Initial Catalog=Manager;Integrated Security=SSPI");
-
-                return new ProjectManagementContext(optionsBuilder.Options);
-            }
         }
     }
 }

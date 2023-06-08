@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using static EFDataAccess.ProjectManagementContext;
 using Microsoft.AspNetCore.Authorization;
+using Implementation;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -16,12 +17,12 @@ namespace Api.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class Files : ControllerBase
+    public class FilesController : ControllerBase
     {
 
         private readonly UseCaseExecutor _executor;
 
-        public Files(UseCaseExecutor executor)
+        public FilesController(UseCaseExecutor executor)
         {
             _executor = executor;
         }
@@ -37,7 +38,10 @@ namespace Api.Controllers
 
         // POST api/<File>
         [HttpPost("{workItemId}")]
-        public async Task<IActionResult> Post(IFormFile file, int workItemId, [FromServices] ProjectManagementContextFactory contextFactory)
+        public async Task<IActionResult> Post(
+            IFormFile file, int workItemId, 
+            [FromServices] ProjectManagementContextFactory contextFactory,
+            [FromServices] AppSettings appSettings)
         {
             // Process uploaded files
             // Don't rely on or trust the FileName property without validation.
@@ -53,7 +57,7 @@ namespace Api.Controllers
             var uniqueFileName = Guid.NewGuid().ToString("N") + fileExtension;
 
             // Specify the path to save the file
-            var filePath = Path.Combine("C:\\Users\\nikol\\OneDrive\\Desktop\\private\\college\\ASP\\Utorak\\Utorak", uniqueFileName);
+            var filePath = Path.Combine(appSettings.FileServerRoot, uniqueFileName);
 
             // Save the file to the specified path
             using (var stream = new FileStream(filePath, FileMode.Create))
