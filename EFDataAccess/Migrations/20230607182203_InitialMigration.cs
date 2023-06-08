@@ -2,7 +2,7 @@
 
 namespace EFDataAccess.Migrations
 {
-    public partial class InitialCreate : Migration
+    public partial class InitialMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -34,7 +34,7 @@ namespace EFDataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "UserRoles",
+                name: "Roles",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -43,11 +43,26 @@ namespace EFDataAccess.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserRoles", x => x.Id);
+                    table.PrimaryKey("PK_Roles", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "WorkItemType",
+                name: "Users",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Username = table.Column<string>(nullable: true),
+                    Password = table.Column<string>(nullable: true),
+                    Email = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Users", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "WorkItemTypes",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -56,7 +71,7 @@ namespace EFDataAccess.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_WorkItemType", x => x.Id);
+                    table.PrimaryKey("PK_WorkItemTypes", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -75,55 +90,6 @@ namespace EFDataAccess.Migrations
                         name: "FK_Reactions_ReactionTypes_ReactionTypeId",
                         column: x => x.ReactionTypeId,
                         principalTable: "ReactionTypes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Users",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Username = table.Column<string>(nullable: true),
-                    Email = table.Column<string>(nullable: true),
-                    RoleId = table.Column<int>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Users", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Users_UserRoles_RoleId",
-                        column: x => x.RoleId,
-                        principalTable: "UserRoles",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "WorkItem",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(nullable: true),
-                    Description = table.Column<string>(nullable: true),
-                    ProjectId = table.Column<int>(nullable: true),
-                    TypeId = table.Column<int>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_WorkItem", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_WorkItem_Projects_ProjectId",
-                        column: x => x.ProjectId,
-                        principalTable: "Projects",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_WorkItem_WorkItemType_TypeId",
-                        column: x => x.TypeId,
-                        principalTable: "WorkItemType",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -155,6 +121,74 @@ namespace EFDataAccess.Migrations
                         onDelete: ReferentialAction.Restrict);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "UserRole",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<int>(nullable: false),
+                    RoleId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserRole", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_UserRole_Roles_RoleId",
+                        column: x => x.RoleId,
+                        principalTable: "Roles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_UserRole_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "WorkItems",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(nullable: true),
+                    Description = table.Column<string>(nullable: true),
+                    ProjectId = table.Column<int>(nullable: true),
+                    TypeId = table.Column<int>(nullable: true),
+                    ProjectId1 = table.Column<int>(nullable: true),
+                    WorkItemTypeId = table.Column<int>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_WorkItems", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_WorkItems_Projects_ProjectId",
+                        column: x => x.ProjectId,
+                        principalTable: "Projects",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_WorkItems_Projects_ProjectId1",
+                        column: x => x.ProjectId1,
+                        principalTable: "Projects",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_WorkItems_WorkItemTypes_TypeId",
+                        column: x => x.TypeId,
+                        principalTable: "WorkItemTypes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_WorkItems_WorkItemTypes_WorkItemTypeId",
+                        column: x => x.WorkItemTypeId,
+                        principalTable: "WorkItemTypes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_Comments_ParentId",
                 table: "Comments",
@@ -171,19 +205,34 @@ namespace EFDataAccess.Migrations
                 column: "ReactionTypeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Users_RoleId",
-                table: "Users",
+                name: "IX_UserRole_RoleId",
+                table: "UserRole",
                 column: "RoleId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_WorkItem_ProjectId",
-                table: "WorkItem",
+                name: "IX_UserRole_UserId",
+                table: "UserRole",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_WorkItems_ProjectId",
+                table: "WorkItems",
                 column: "ProjectId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_WorkItem_TypeId",
-                table: "WorkItem",
+                name: "IX_WorkItems_ProjectId1",
+                table: "WorkItems",
+                column: "ProjectId1");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_WorkItems_TypeId",
+                table: "WorkItems",
                 column: "TypeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_WorkItems_WorkItemTypeId",
+                table: "WorkItems",
+                column: "WorkItemTypeId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -195,22 +244,25 @@ namespace EFDataAccess.Migrations
                 name: "Reactions");
 
             migrationBuilder.DropTable(
-                name: "WorkItem");
+                name: "UserRole");
 
             migrationBuilder.DropTable(
-                name: "Users");
+                name: "WorkItems");
 
             migrationBuilder.DropTable(
                 name: "ReactionTypes");
 
             migrationBuilder.DropTable(
+                name: "Roles");
+
+            migrationBuilder.DropTable(
+                name: "Users");
+
+            migrationBuilder.DropTable(
                 name: "Projects");
 
             migrationBuilder.DropTable(
-                name: "WorkItemType");
-
-            migrationBuilder.DropTable(
-                name: "UserRoles");
+                name: "WorkItemTypes");
         }
     }
 }

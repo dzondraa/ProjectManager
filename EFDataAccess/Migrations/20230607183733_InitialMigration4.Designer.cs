@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EFDataAccess.Migrations
 {
     [DbContext(typeof(ProjectManagementContext))]
-    [Migration("20230605155505_UserRoleRelation")]
-    partial class UserRoleRelation
+    [Migration("20230607183733_InitialMigration4")]
+    partial class InitialMigration4
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -111,7 +111,7 @@ namespace EFDataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("UserRoles");
+                    b.ToTable("Roles");
                 });
 
             modelBuilder.Entity("Domain.Entities.User", b =>
@@ -122,6 +122,9 @@ namespace EFDataAccess.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Password")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Username")
@@ -170,16 +173,16 @@ namespace EFDataAccess.Migrations
                     b.Property<int?>("ProjectId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("TypeId")
+                    b.Property<int?>("WorkItemTypeId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ProjectId");
 
-                    b.HasIndex("TypeId");
+                    b.HasIndex("WorkItemTypeId");
 
-                    b.ToTable("WorkItem");
+                    b.ToTable("WorkItems");
                 });
 
             modelBuilder.Entity("Domain.Entities.WorkItemType", b =>
@@ -194,7 +197,7 @@ namespace EFDataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("WorkItemType");
+                    b.ToTable("WorkItemTypes");
                 });
 
             modelBuilder.Entity("Domain.Entities.Comment", b =>
@@ -233,12 +236,12 @@ namespace EFDataAccess.Migrations
             modelBuilder.Entity("Domain.Entities.WorkItem", b =>
                 {
                     b.HasOne("Domain.Entities.Project", "Project")
-                        .WithMany()
+                        .WithMany("WorkItems")
                         .HasForeignKey("ProjectId");
 
-                    b.HasOne("Domain.Entities.WorkItemType", "Type")
-                        .WithMany()
-                        .HasForeignKey("TypeId");
+                    b.HasOne("Domain.Entities.WorkItemType", "WorkItemType")
+                        .WithMany("WorkItems")
+                        .HasForeignKey("WorkItemTypeId");
                 });
 #pragma warning restore 612, 618
         }

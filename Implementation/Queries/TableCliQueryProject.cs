@@ -1,20 +1,13 @@
 ﻿using Api.Searches;
-using Application;
 using Application.DataTransfer;
 using Application.Queries;
 using AutoMapper;
 using AzureTableDataAccess;
 using AzureTableDataAccess.Entities;
 using Implementation.Core;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Azure.Cosmos.Table;
-using Microsoft.Azure.Documents.SystemFunctions;
 using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Implementation.Queries
 {

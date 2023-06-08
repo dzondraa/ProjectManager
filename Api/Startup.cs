@@ -25,6 +25,14 @@ using Api.Core;
 using Implementation.Validatiors;
 using EFDataAccess;
 using Microsoft.EntityFrameworkCore;
+using Implementation.DependencyInjection;
+using static EFDataAccess.ProjectManagementContext;
+using Api.Jwt;
+using SocialNetwork.API.Jwt.TokenStorage;
+using SocialNetwork.API.Jwt;
+using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace Api
 {
@@ -40,8 +48,11 @@ namespace Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton<ProjectManagementContext>();
-            services.AddScoped<ProjectManagementContext>();
+            var appSettings = new AppSettings();
+            Configuration.Bind(appSettings);
+
+            services.AddSingleton<ProjectManagementContextFactory>();
+            //services.AddScoped<ProjectManagementContext>();
 
             services.AddTransient<UseCaseExecutor>();
             // Projects services
@@ -52,10 +63,17 @@ namespace Api
             services.AddTransient<IUpdateProjectCommandAsync, TableCliUpdateProjectAsync>();
             // Tasks services
             services.AddTransient<IQueryTask, TableCliQueryTask>();
-            services.AddTransient<IGetTask, LinqGetTask>();//ICreateTaskCommandAsync
+            //services.AddTransient<IGetTask, LinqGetTask>();//ICreateTaskCommandAsync
             services.AddTransient<ICreateTaskCommandAsync, TableCliCreateTaskAsync>();
             services.AddTransient<IUpdateTaskAsync, TableCliUpdateTaskAsync>();
             services.AddTransient<IDeleteTaskAsync, TableCliDeleteTaskAsync>();
+            
+            // USE CASES
+            services.AddUserUseCases();
+            services.AddRoleUseCases();
+            services.AddWorkItemUseCases();
+            services.AddCommentsUseCases();
+
             // Files
             services.AddTransient<IGetCode, BlobCliGetCodeFiles>();
             services.AddTransient<IUploadFileCommandAsync, BlobCliUploadFile>();
@@ -63,16 +81,66 @@ namespace Api
             services.AddTransient<ProjectRequestValidator>();
             services.AddTransient<TaskRequestValidatior>();
             services.AddTransient<FileUploadValidator>();
+            services.AddTransient<CreateUserRequestValidator>();
+            services.AddTransient<UpdateUserRequestValidator>();
+            services.AddTransient<CreateWorkItemValidator>();
+            services.AddTransient<UpdateWorkItemValidator>();
+            services.AddTransient<UpdateCommentValidation>();
+            services.AddTransient<CreateCommentValidator>();
 
 
 
-            services.AddTransient<IUseCaseLogger, ConsoleUseCaseLogger>();
+            services.AddTransient<IUseCaseLogger, DbUseCaseLogger>();
             services.AddSingleton(x => new BlobServiceClient("DefaultEndpointsProtocol=https;AccountName=eduaccount;AccountKey=1aum0Jx/fz/xENwYqz+j7JRTnYS5cIsUUdfZ1XvQ2R7NnoIaObJ7bg4KxInTt1IlvISRKOebtBSrroUEl43AZA==;EndpointSuffix=core.windows.net"));
 
             services.AddAutoMapper(typeof(Startup));
             services
                 .AddControllers(/*optrions => optrions.Filters.Add<ValidationFilter>()*/);
-                //.AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<Startup>());
+            //.AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<Startup>());
+
+            // AUTH
+            services.AddHttpContextAccessor();
+            services.AddScoped<IApplicationActor>(x =>
+            {
+                var accessor = x.GetService<IHttpContextAccessor>();
+                var header = accessor.HttpContext.Request.Headers["Authorization"];
+
+                var data = header.ToString().Split("Bearer ");
+
+                if (data.Length < 2)
+                {
+                    return new AnonymusActor();
+                }
+
+                var handler = new JwtSecurityTokenHandler();
+
+                var tokenObj = handler.ReadJwtToken(data[1].ToString());
+
+                var claims = tokenObj.Claims;
+
+                var email = claims.First(x => x.Type == "Email").Value;
+                var id = claims.First(x => x.Type == "Id").Value;
+                var username = claims.First(x => x.Type == "Username").Value;
+                var roles = claims.Where(x => x.Type == "role").ToList();
+
+                var roleIds = roles.Select(x => JsonConvert.DeserializeObject<string>(x.Value));
+
+                return new JwtActor
+                {
+                    Email = email,
+                    Roles = roleIds,
+                    Id = int.Parse(id),
+                    Username = username,
+                };
+            });
+            services.AddJwt(appSettings);
+            services.AddTransient<ITokenStorage, InMemoryTokenStorage>();
+            services.AddTransient<JwtManager>(x =>
+            {
+                var contextFactoy = x.GetService<ProjectManagementContextFactory>();
+                var tokenStorage = x.GetService<ITokenStorage>();
+                return new JwtManager(contextFactoy, appSettings.Jwt.Issuer, appSettings.Jwt.SecretKey, appSettings.Jwt.DurationSeconds, tokenStorage);
+            });
 
             //Swagger
             services.AddSwaggerGen(c =>
@@ -103,11 +171,11 @@ namespace Api
 
             app.UseRouting();
             app.UseMiddleware<GlobalExceptionHandler>();
-            app.UseMiddleware<GlobalIdValidator>();
 
 
+
+            app.UseAuthentication();
             app.UseAuthorization();
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

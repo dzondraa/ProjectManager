@@ -52,7 +52,7 @@ namespace Api.Controllers
         }
 
         // PUT api/<Project>/5
-        [HttpPut("{id}")]
+        [HttpPatch("{id}")]
         public async Task<IActionResult> Put(string id, [FromBody] ProjectRequest request, [FromServices] IUpdateProjectCommandAsync command)
         {
             var reqestAsDto = _mapper.Map<ProjectDto>(request);

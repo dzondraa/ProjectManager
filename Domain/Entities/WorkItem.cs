@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
-using System.Text;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Domain.Entities
 {
@@ -13,11 +12,14 @@ namespace Domain.Entities
 
         public string Description { get; set; }
 
+
         //public IEnumerable<Dictionary<string, object>> Properties { get; set; } = null;
 
         public virtual Project Project { get; set; }
 
-        public virtual WorkItemType Type { get; set; }
+        public virtual WorkItemType WorkItemType { get; set; }
+
+        public virtual ICollection<WorkItemAttachments> Attachments { get;set; }
 
     }
 }

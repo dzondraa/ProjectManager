@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace Domain.Entities
 {
@@ -12,5 +10,8 @@ namespace Domain.Entities
 
         //  Storing only path | guid of project code files
         public string Code { get; set; }
+
+        public virtual ICollection<WorkItem> WorkItems { get; set; }
+
     }
 }

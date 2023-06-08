@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EFDataAccess.Migrations
 {
     [DbContext(typeof(ProjectManagementContext))]
-    [Migration("20230605154900_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20230607183231_InitialMigration3")]
+    partial class InitialMigration3
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -99,30 +99,7 @@ namespace EFDataAccess.Migrations
                     b.ToTable("ReactionTypes");
                 });
 
-            modelBuilder.Entity("Domain.Entities.User", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Email")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("RoleId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Username")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RoleId");
-
-                    b.ToTable("Users");
-                });
-
-            modelBuilder.Entity("Domain.Entities.UserRole", b =>
+            modelBuilder.Entity("Domain.Entities.Role", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -134,7 +111,50 @@ namespace EFDataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("UserRoles");
+                    b.ToTable("Roles");
+                });
+
+            modelBuilder.Entity("Domain.Entities.User", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Password")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Username")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("Domain.Entities.UserRole", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("RoleId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RoleId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserRole");
                 });
 
             modelBuilder.Entity("Domain.Entities.WorkItem", b =>
@@ -162,7 +182,7 @@ namespace EFDataAccess.Migrations
 
                     b.HasIndex("TypeId");
 
-                    b.ToTable("WorkItem");
+                    b.ToTable("WorkItems");
                 });
 
             modelBuilder.Entity("Domain.Entities.WorkItemType", b =>
@@ -177,7 +197,7 @@ namespace EFDataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("WorkItemType");
+                    b.ToTable("WorkItemTypes");
                 });
 
             modelBuilder.Entity("Domain.Entities.Comment", b =>
@@ -198,21 +218,29 @@ namespace EFDataAccess.Migrations
                         .HasForeignKey("ReactionTypeId");
                 });
 
-            modelBuilder.Entity("Domain.Entities.User", b =>
+            modelBuilder.Entity("Domain.Entities.UserRole", b =>
                 {
-                    b.HasOne("Domain.Entities.UserRole", "Role")
-                        .WithMany()
-                        .HasForeignKey("RoleId");
+                    b.HasOne("Domain.Entities.Role", "Role")
+                        .WithMany("UserRole")
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.User", "User")
+                        .WithMany("UserRole")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Domain.Entities.WorkItem", b =>
                 {
                     b.HasOne("Domain.Entities.Project", "Project")
-                        .WithMany()
+                        .WithMany("WorkItems")
                         .HasForeignKey("ProjectId");
 
                     b.HasOne("Domain.Entities.WorkItemType", "Type")
-                        .WithMany()
+                        .WithMany("WorkItems")
                         .HasForeignKey("TypeId");
                 });
 #pragma warning restore 612, 618

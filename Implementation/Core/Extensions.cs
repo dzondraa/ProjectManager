@@ -1,15 +1,11 @@
 ﻿using Api.Searches;
-using Application.DataTransfer;
 using Application.Queries;
 using AutoMapper;
-using AzureTableDataAccess;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Azure.Cosmos.Table;
+using Microsoft.Azure.KeyVault.Models;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Implementation.Core
 {
@@ -29,6 +25,25 @@ namespace Implementation.Core
             };
 
             return response;
+        }
+
+        public static PagedResponse<TResponse> ToPagedResponse<TResponse, TQueryEntity>(
+            this IQueryable<TQueryEntity> query, 
+            PagedSearch search, 
+            IMapper mapper,
+            Action<List<TQueryEntity>> computeData = null)
+        {
+            var queryString = query.ToString();
+            var data = query.Skip((search.PageNumber - 1) * search.PageSize).Take(search.PageSize).ToList();
+            
+            if(!(computeData is null))
+                computeData(data);
+            
+            return new PagedResponse<TResponse>
+            {
+                Items = mapper.Map<List<TResponse>>(data),
+                TotalCount = query.Count(),
+            };
         }
 
     }

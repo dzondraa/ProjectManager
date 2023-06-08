@@ -9,5 +9,7 @@
         public virtual User User { get; set; }
 
         public virtual Comment Parent { get; set; }
+
+        public virtual WorkItem WorkItem { get; set; }
     }
 }

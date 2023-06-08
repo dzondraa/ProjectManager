@@ -1,17 +1,13 @@
 ﻿using Application;
-using Application.Commands;
 using Application.DataTransfer;
 using Application.Queries;
-using Application.Requests;
-using Azure.Storage.Blobs.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Azure.Management.BatchAI.Fluent.Models;
-using Microsoft.Azure.Management.ResourceManager.Fluent.Core.ResourceActions;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using static EFDataAccess.ProjectManagementContext;
+using Microsoft.AspNetCore.Authorization;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -19,6 +15,7 @@ namespace Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class Files : ControllerBase
     {
 
@@ -28,24 +25,7 @@ namespace Api.Controllers
         {
             _executor = executor;
         }
-        //// GET: api/<File>
-        //[HttpGet]
-        //public IEnumerable<string> Get()
-        //{
-        //    return new string[] { "value1", "value2" };
-        //}
-
-        //// GET api/<File>/5
-        //[HttpGet("{fileName}")]
-        //public async Task<IActionResult> Get(string fileName, [FromServices] IGetCode query)
-        //{
-
-        //    var file = await _executor.ExecuteQueryAsync(query, new FileDto { Name = fileName });
-        //    return File(file.Content, file.ContentType);
-
-        //}
-
-        // GET api/<File>/download
+    
         [HttpGet("{projectName}")]
         public async Task<IActionResult> Get(string projectName, [FromServices] IGetCode query)
         {
@@ -56,27 +36,53 @@ namespace Api.Controllers
         }
 
         // POST api/<File>
-        [HttpPost]
-        public async Task<IActionResult> Post([FromBody] FileRequest request, [FromServices] IUploadFileCommandAsync command)
+        [HttpPost("{workItemId}")]
+        public async Task<IActionResult> Post(IFormFile file, int workItemId, [FromServices] ProjectManagementContextFactory contextFactory)
         {
-            if (!System.IO.File.Exists(request.Path)) return BadRequest(new
+            // Process uploaded files
+            // Don't rely on or trust the FileName property without validation.
+
+            if (file == null || file.Length == 0)
+                return BadRequest("Invalid file");
+
+            // Get the file name and extension
+            var fileName = Path.GetFileName(file.FileName);
+            var fileExtension = Path.GetExtension(fileName);
+
+            // Generate a unique file name (optional)
+            var uniqueFileName = Guid.NewGuid().ToString("N") + fileExtension;
+
+            // Specify the path to save the file
+            var filePath = Path.Combine("C:\\Users\\nikol\\OneDrive\\Desktop\\private\\college\\ASP\\Utorak\\Utorak", uniqueFileName);
+
+            // Save the file to the specified path
+            using (var stream = new FileStream(filePath, FileMode.Create))
             {
-                message = "Please provide a valid file path!"
+                file.CopyTo(stream);
+            }
+
+            var database = contextFactory.CreateDbContext(null);
+            var newFileRecord = new Domain.Entities.File
+            {
+                Name = fileName,
+                Type = fileExtension,
+                Location = filePath,
+                Size = (int)(file.Length * 0.000001),
+            };
+            var inserted = database.Files.Add(newFileRecord);
+            database.SaveChanges();
+
+            database.WorkItemAttachments.Add(new Domain.Entities.WorkItemAttachments
+            {
+                FileId = newFileRecord.Id,
+                WorkItemId = workItemId
             });
-            await _executor.ExecuteCommandAsync(command, request);
-            return Ok("File uploaded");
+            database.SaveChanges();
+            // Return a success response or any other necessary information
+            return Ok(new
+            {
+                FilePath = filePath,
+            });
         }
-
-        // PUT api/<File>/5
-        //[HttpPut("{id}")]
-        //public void Put(int id, [FromBody] string value)
-        //{
-        //}
-
-        //// DELETE api/<File>/5
-        //[HttpDelete("{id}")]
-        //public void Delete(int id)
-        //{
-        //}
     }
 }

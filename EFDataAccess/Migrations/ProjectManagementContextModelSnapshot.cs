@@ -19,6 +19,27 @@ namespace EFDataAccess.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+            modelBuilder.Entity("Domain.Entities.AuditLog", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Action")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Actor")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Timestamp")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AuditLogs");
+                });
+
             modelBuilder.Entity("Domain.Entities.Comment", b =>
                 {
                     b.Property<int>("Id")
@@ -35,13 +56,42 @@ namespace EFDataAccess.Migrations
                     b.Property<int?>("UserId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("WorkItemId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ParentId");
 
                     b.HasIndex("UserId");
 
+                    b.HasIndex("WorkItemId");
+
                     b.ToTable("Comments");
+                });
+
+            modelBuilder.Entity("Domain.Entities.File", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Location")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Size")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Type")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Files");
                 });
 
             modelBuilder.Entity("Domain.Entities.Project", b =>
@@ -109,7 +159,7 @@ namespace EFDataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("UserRoles");
+                    b.ToTable("Roles");
                 });
 
             modelBuilder.Entity("Domain.Entities.User", b =>
@@ -120,6 +170,9 @@ namespace EFDataAccess.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Password")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Username")
@@ -168,16 +221,38 @@ namespace EFDataAccess.Migrations
                     b.Property<int?>("ProjectId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("TypeId")
+                    b.Property<int?>("WorkItemTypeId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ProjectId");
 
-                    b.HasIndex("TypeId");
+                    b.HasIndex("WorkItemTypeId");
 
-                    b.ToTable("WorkItem");
+                    b.ToTable("WorkItems");
+                });
+
+            modelBuilder.Entity("Domain.Entities.WorkItemAttachments", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("FileId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("WorkItemId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FileId");
+
+                    b.HasIndex("WorkItemId");
+
+                    b.ToTable("WorkItemAttachments");
                 });
 
             modelBuilder.Entity("Domain.Entities.WorkItemType", b =>
@@ -192,7 +267,7 @@ namespace EFDataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("WorkItemType");
+                    b.ToTable("WorkItemTypes");
                 });
 
             modelBuilder.Entity("Domain.Entities.Comment", b =>
@@ -204,6 +279,10 @@ namespace EFDataAccess.Migrations
                     b.HasOne("Domain.Entities.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
+
+                    b.HasOne("Domain.Entities.WorkItem", "WorkItem")
+                        .WithMany()
+                        .HasForeignKey("WorkItemId");
                 });
 
             modelBuilder.Entity("Domain.Entities.Reaction", b =>
@@ -231,12 +310,27 @@ namespace EFDataAccess.Migrations
             modelBuilder.Entity("Domain.Entities.WorkItem", b =>
                 {
                     b.HasOne("Domain.Entities.Project", "Project")
-                        .WithMany()
+                        .WithMany("WorkItems")
                         .HasForeignKey("ProjectId");
 
-                    b.HasOne("Domain.Entities.WorkItemType", "Type")
+                    b.HasOne("Domain.Entities.WorkItemType", "WorkItemType")
+                        .WithMany("WorkItems")
+                        .HasForeignKey("WorkItemTypeId");
+                });
+
+            modelBuilder.Entity("Domain.Entities.WorkItemAttachments", b =>
+                {
+                    b.HasOne("Domain.Entities.File", "File")
                         .WithMany()
-                        .HasForeignKey("TypeId");
+                        .HasForeignKey("FileId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.WorkItem", "WorkItem")
+                        .WithMany("Attachments")
+                        .HasForeignKey("WorkItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

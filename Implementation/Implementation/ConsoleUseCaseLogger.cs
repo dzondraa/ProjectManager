@@ -1,15 +1,13 @@
 ﻿using Application;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Implementation.Implementation
 {
     public class ConsoleUseCaseLogger : IUseCaseLogger
     {
-        public void Log(IUseCase useCase, object useCaseData)
+        public void Log(IUseCase useCase, object useCaseData, IApplicationActor actor)
         {
-            Console.WriteLine($"{DateTime.Now} Running action {useCase.Name}");
+            Console.WriteLine($"[{DateTime.Now}] [Actor: {actor?.Email}] Running action {useCase.Name}");
         }
     }
 }
