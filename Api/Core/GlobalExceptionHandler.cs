@@ -81,7 +81,12 @@ namespace Api.Core
                         };
                         break;
 
-
+                    case UnauthorizedAccessException unauthorizedException:
+                        statusCode = 401;
+                        response = new {
+                            message = unauthorizedException.Message
+                        };
+                        break;
 
                 }
 
