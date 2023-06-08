@@ -1,4 +1,5 @@
 # Project Manager
+# WIKI https://github.com/dzondraa/ProjectManager/wiki
 Backend platform (Domain driven design) based on CQRS (Command Query Responsibility Segregation) pattern and REST API - For storing project and task data with code
 
 This repository contains source code for:
